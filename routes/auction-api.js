@@ -7,8 +7,6 @@ var router = express.Router();
 var moment = require('moment');
 
 var auth = require('../lib/mw/auth');
-var loadplayer = require('../lib/mw/loadplayer');
-
 var Auction = require('../lib/auction');
 var auctionService = require('../lib/auction-service');
 
@@ -52,7 +50,8 @@ function handleErrorResult(result, res) {
   } else {
     res.statusCode = 403;
   }
-  return res.json({error: result.error});
+  
+  return res.json({message: result.error});
 }
 
 /**
@@ -114,7 +113,6 @@ router.get('/:id',
  */
 router.post('/',
   auth.private(),
-  loadplayer(),
   function (req, res, next) {
     auctionService.queueAuction(req.player, req.body, 
       function (err, result) {
@@ -142,7 +140,6 @@ router.post('/',
  */
 router.post('/bet',
   auth.private(),
-  loadplayer(),
   function (req, res, next) {
     auctionService.bet(req.player, req.body.bid, function (err, result) {
       if (err) return next(err);
@@ -161,7 +158,6 @@ router.post('/bet',
  */
 router.delete('/:id',
   auth.private(),
-  loadplayer(),
   function (req, res, next) {
     Auction.get(req.params.id, function (err, auction) {
       if (err) return next(err);

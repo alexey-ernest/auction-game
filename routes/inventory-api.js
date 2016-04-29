@@ -6,8 +6,6 @@ var express = require('express');
 var router = express.Router();
 
 var auth = require('../lib/mw/auth');
-var loadplayer = require('../lib/mw/loadplayer');
-
 var Inventory = require('../lib/inventory');
 
 /**
@@ -30,7 +28,6 @@ function mapInventoryItem(i) {
  */
 router.get('/',
   auth.private(),
-  loadplayer(),
   function (req, res, next) {
     Inventory.getPlayerItems(req.player.id, function (err, items) {
       if (err) return next(err);
