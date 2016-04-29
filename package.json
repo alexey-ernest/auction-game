@@ -1,0 +1,67 @@
+{
+  "name": "auction-game",
+  "version": "0.0.1",
+  "description": "Auction game built on node.js and angular.js",
+  "main": "web.js",
+  "dependencies": {
+    "async": "^1.5.2",
+    "body-parser": "^1.12.4",
+    "coffee-script": "^1.10.0",
+    "connect-pg-simple": "^3.1.0",
+    "debug": "^2.2.0",
+    "express": "^4.12.4",
+    "express-session": "^1.13.0",
+    "jade": "^1.11.0",
+    "moment": "^2.13.0",
+    "morgan": "^1.6.0",
+    "nodejs-model": "^0.1.6",
+    "pg": "^4.5.3"
+  },
+  "devDependencies": {
+    "angular": "^1.5.5",
+    "angular-animate": "^1.4.7",
+    "angular-aria": "^1.4.7",
+    "angular-cookies": "^1.4.7",
+    "angular-material": "^1.0.7",
+    "angular-messages": "^1.5.5",
+    "angular-mocks": "^1.5.5",
+    "angular-route": "^1.5.5",
+    "angular-sanitize": "^1.5.5",
+    "angular-ui-router": "^0.2.15",
+    "chai": "^3.5.0",
+    "font-awesome": "^4.4.0",
+    "gulp": "^3.9.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-cssnano": "^2.1.0",
+    "gulp-jade": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-stylus": "^2.1.0",
+    "gulp-uglify": "^1.4.2",
+    "jquery": "^2.1.4",
+    "moment": "^2.10.6",
+    "node-uuid": "^1.4.7",
+    "supertest": "^1.2.0"
+  },
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexey-ernest/auction-game"
+  },
+  "keywords": [
+    "crossover",
+    "nodejs",
+    "auction",
+    "game",
+    "api"
+  ],
+  "author": "Alex Melnikov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexey-ernest/auction-game/issues"
+  }
+}

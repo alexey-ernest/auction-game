@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="auction" ng-controller="AuctionCtrl">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title ng-bind="pageTitle">Crossover Auction Game</title>
+    <link rel="stylesheet" href="/css/angular-material.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/auction.min.css">
+  </head>
+  <body>
+    <div layout="column" class="ng-cloak">
+      <cb-menu></cb-menu>
+      <div class="page-content">
+        <div ui-view></div>
+        <script type="text/ng-template" id="home.html">
+          <div flex="100" layout="row" layout-align="center center" layout-padding>
+            <h1 class="md-display-1">Hello, {{player.name}}</h1>
+          </div>
+          <div layout="row" layout-align="center">
+            <div flex="33" flex-sm="100" flex-md="33">
+              <md-card>
+                <md-card-title>
+                  <md-card-title-text><span class="md-headline">Player Stats</span></md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                  <auction-stats></auction-stats>
+                </md-card-content>
+              </md-card>
+            </div>
+            <div flex="33" flex-sm="100" flex-md="33">
+              <md-card>
+                <md-card-title>
+                  <md-card-title-text><span class="md-headline">Inventory</span></md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                  <auction-inventory></auction-inventory>
+                </md-card-content>
+              </md-card>
+            </div>
+            <div flex="33" flex-sm="100" flex-md="33">
+              <md-card>
+                <md-card-title>
+                  <md-card-title-text><span class="md-headline">Auction</span></md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                  <auction-game></auction-game>
+                </md-card-content>
+              </md-card>
+            </div>
+          </div>
+        </script>
+        <script type="text/ng-template" id="login.html">
+          <div layout="row" layout-align="center">
+            <div flex="25" flex-sm="0" flex-md="20"></div>
+            <div flex="50" flex-sm="100" flex-md="60">
+              <form name="loginform" ng-submit="submit(login)">
+                <md-card>
+                  <md-card-content>
+                    <div layout="row">
+                      <div flex="10"></div>
+                      <div flex="80">
+                        <h1 class="md-display-1">Log in</h1>
+                        <p>Choose your name to start the game</p>
+                        <md-input-container class="md-block"></md-input-container>
+                        <md-input-container class="md-block md-title">
+                          <label>Name</label>
+                          <input required type="text" name="loginName" ng-model="login.name" minlength="3" maxlength="50">
+                        </md-input-container>
+                        <md-card-actions layout="row" layout-align="end center">
+                          <md-button type="submit" ng-disabled="signupform.$invalid || loading" class="md-raised md-accent"><i ng-show="loading" class="fa fa-circle-o-notch fa-spin faster"> </i><span> Submit</span></md-button>
+                        </md-card-actions>
+                      </div>
+                      <div flex="10"></div>
+                    </div>
+                  </md-card-content>
+                </md-card>
+              </form>
+            </div>
+            <div flex="25" flex-sm="0" flex-md="20"></div>
+          </div>
+        </script>
+        <script type="text/ng-template" id="stats.html">
+          <p><span>Name: </span><span>{{player.name}}</span></p>
+          <p><span>Coins: </span><span>{{player.coins}}</span></p>
+          <p>
+            <md-button ng-click="logout()" class="md-raised"><span>Logout</span></md-button>
+          </p>
+        </script>
+        <script type="text/ng-template" id="inventory.html">
+          <ul>
+            <li ng-repeat="i in inventory"><span>{{i.item}} ({{i.quantity}})</span>
+              <md-button ng-click="auction(i, $event)" class="md-raised">Auction</md-button>
+            </li>
+          </ul>
+        </script>
+        <script type="text/ng-template" id="auction-dialog.html">
+          <md-dialog aria-label="Start Auction" ng-cloak class="new-auction">
+            <form name="auctionform" ng-submit="confirm(auction)">
+              <md-dialog-content>
+                <div class="md-dialog-content">
+                  <h2 class="md-headline">New Auction</h2>
+                  <p>Please, specify number of {{auction.item.item}}s.</p>
+                  <md-input-container class="md-block"></md-input-container>
+                  <md-input-container class="md-block md-title">
+                    <label>Quantity</label>
+                    <input required type="number" name="auctionQuantity" ng-model="auction.quantity" min="1" max="{{auction.item.quantity}}">
+                  </md-input-container>
+                  <md-input-container class="md-block md-title">
+                    <label>Minimum bid</label>
+                    <input required type="number" name="auctionMinBid" ng-model="auction.min_bid" min="1">
+                  </md-input-container>
+                </div>
+              </md-dialog-content>
+              <md-dialog-actions layout="row">
+                <md-button type="submit" ng-disabled="auctionform.$invalid" class="md-raised md-accent"><span>Ok</span></md-button>
+              </md-dialog-actions>
+            </form>
+          </md-dialog>
+        </script>
+        <script type="text/ng-template" id="game.html">
+          <div ng-if="auction">
+            <p><span>Seller: </span><span>{{auction.seller_name}}</span></p>
+            <p><span>Item Name: </span><span>{{auction.item}}</span></p>
+            <p><span>Quantity: </span><span>{{auction.quantity}}</span></p>
+            <p><span>Time Left: {{timeLeft}}s</span></p>
+            <p><span>Winning Bid: </span><span>{{auction.bid || auction.min_bid}}</span></p>
+            <md-button ng-if="player.id !== auction.seller" ng-click="doBet($event)" class="md-raised md-accent">Place a Bid</md-button>
+          </div>
+          <div ng-if="!auction &amp;&amp; latest &amp;&amp; latest.winner">
+            <p><span>Congrtulations! The winner is {{latest.winner_name}}.</span></p>
+            <p><span>Seller: </span><span>{{latest.seller_name}}</span></p>
+            <p><span>Item Name: </span><span>{{latest.item}}</span></p>
+            <p><span>Quantity: </span><span>{{latest.quantity}}</span></p>
+            <p><span>Winning Bid: </span><span>{{latest.bid}}</span></p>
+          </div>
+          <div ng-if="!auction &amp;&amp; (!latest || !latest.winner)">
+            <p>There are no active auctions. Start new one.</p>
+          </div>
+        </script>
+        <script type="text/ng-template" id="bet-dialog.html">
+          <md-dialog aria-label="Place a bid" ng-cloak class="new-auction">
+            <form name="betform" ng-submit="confirm(bet)">
+              <md-dialog-content>
+                <div class="md-dialog-content">
+                  <h2 class="md-headline">Place Bid</h2>
+                  <md-input-container class="md-block"></md-input-container>
+                  <md-input-container class="md-block md-title">
+                    <label>Your Bid</label>
+                    <input required type="number" name="bid" ng-model="bet.bid" min="{{auction.bid || auction.min_bid}}" max="{{player.coins}}">
+                  </md-input-container>
+                </div>
+              </md-dialog-content>
+              <md-dialog-actions layout="row">
+                <md-button type="submit" ng-disabled="betform.$invalid" class="md-raised md-accent"><span>Ok</span></md-button>
+              </md-dialog-actions>
+            </form>
+          </md-dialog>
+        </script>
+      </div>
+      <footer class="page-footer">
+        <section>
+          <div class="brand-copyright">
+            <p>Crossover Auction Game, 2016.</p>
+          </div>
+        </section>
+      </footer>
+    </div>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/angular-ui-router.min.js"></script>
+    <script src="/js/angular-cookies.min.js"></script>
+    <script src="/js/angular-material.min.js"></script>
+    <script src="/js/moment.min.js"></script>
+    <script src="/js/auction.js"></script>
+  </body>
+</html>

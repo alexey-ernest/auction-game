@@ -1,0 +1,43 @@
+script(type="text/ng-template", id="game.html")
+	div(ng-if="auction")
+		p
+			span Seller: 
+			span {{auction.seller_name}}
+		p
+			span Item Name: 
+			span {{auction.item}}
+
+		p
+			span Quantity: 
+			span {{auction.quantity}}
+
+		p
+			span Time Left: {{timeLeft}}s
+
+		p
+			span Winning Bid: 
+			span {{auction.bid || auction.min_bid}}
+
+		md-button.md-raised.md-accent(ng-if="player.id !== auction.seller", ng-click="doBet($event)") Place a Bid
+
+	div(ng-if="!auction && latest && latest.winner")
+		p
+			span Congrtulations! The winner is {{latest.winner_name}}.
+
+		p
+			span Seller: 
+			span {{latest.seller_name}}
+		p
+			span Item Name: 
+			span {{latest.item}}
+
+		p
+			span Quantity: 
+			span {{latest.quantity}}
+
+		p
+			span Winning Bid: 
+			span {{latest.bid}}
+
+	div(ng-if="!auction && (!latest || !latest.winner)")
+		p There are no active auctions. Start new one.

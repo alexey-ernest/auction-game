@@ -1,0 +1,66 @@
+@import colors
+
+body, html
+    background-color: bg
+    color: body-text
+
+// Page content
+.page-content
+    padding: 50px 20px 100px 20px
+
+// Footer
+.page-footer
+    background: footer-bg
+    color: footer-text
+    font-size: 13px
+    padding: 40px 0 20px
+    
+    section
+        max-width: 1014px
+        padding: 0 1.5rem
+        margin: 0 auto
+
+    p
+        margin-bottom: 5px
+
+    .brand-copyright
+        font-size: 10px
+        margin-bottom: 30px
+        
+        [class^=mdi-]
+        [class*=mdi-]
+            font-size: 14px
+
+    for n in 1..6
+        h{n}
+            color: footer-heading
+    
+    a
+        color: footer-text
+        text-decoration: none
+        font-weight: bold
+        
+        &:hover
+            color: footer-text-hover
+            text-decoration: underline
+    
+    ul.bottom-menu
+        margin: 0 0 30px
+        padding: 0
+
+        li
+            list-style: none
+            margin-bottom: 10px
+
+@media (max-width: 960px)
+    .page-footer
+        text-align: center
+
+md-dialog.new-auction
+    width: 400px
+
+// Font Awesome
+.fa-spin.faster
+    -webkit-animation: fa-spin 1s infinite linear;
+    animation: fa-spin 1s infinite linear; 
+    

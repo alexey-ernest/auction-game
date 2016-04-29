@@ -1,0 +1,25 @@
+script(type="text/ng-template", id="home.html")
+    div(flex="100", layout="row", layout-align="center center", layout-padding)
+        h1.md-display-1 Hello, {{player.name}}
+    div(layout="row", layout-align="center")
+        div(flex="33", flex-sm="100", flex-md="33")
+            md-card
+                md-card-title
+                    md-card-title-text
+                        span.md-headline Player Stats
+                md-card-content
+                    auction-stats
+        div(flex="33", flex-sm="100", flex-md="33")
+            md-card
+                md-card-title
+                    md-card-title-text
+                        span.md-headline Inventory
+                md-card-content
+                    auction-inventory
+        div(flex="33", flex-sm="100", flex-md="33")
+            md-card
+                md-card-title
+                    md-card-title-text
+                        span.md-headline Auction
+                md-card-content
+                    auction-game

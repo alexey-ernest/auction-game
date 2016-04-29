@@ -1,0 +1,22 @@
+script(type="text/ng-template", id="login.html")
+    div(layout="row", layout-align="center")
+        div(flex="25", flex-sm="0", flex-md="20")
+        div(flex="50", flex-sm="100", flex-md="60")
+            form(name="loginform", ng-submit="submit(login)")
+                md-card
+                    md-card-content
+                        div(layout="row")
+                            div(flex="10")
+                            div(flex="80")
+                                h1.md-display-1 Log in
+                                p Choose your name to start the game
+                                md-input-container.md-block
+                                md-input-container.md-block.md-title
+                                    label Name
+                                    input(required, type="text", name="loginName", ng-model="login.name", minlength="3", maxlength="50")
+                                md-card-actions(layout="row", layout-align="end center")
+                                    md-button.md-raised.md-accent(type="submit", ng-disabled="signupform.$invalid || loading")
+                                        i.fa.fa-circle-o-notch.fa-spin.faster(ng-show="loading") 
+                                        span  Submit
+                            div(flex="10")
+        div(flex="25", flex-sm="0", flex-md="20")

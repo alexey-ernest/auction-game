@@ -1,0 +1,10 @@
+script(type="text/ng-template", id="stats.html")
+	p
+		span Name: 
+		span {{player.name}}
+	p
+		span Coins: 
+		span {{player.coins}}
+	p
+		md-button.md-raised(ng-click="logout()")
+			span Logout

@@ -1,0 +1,31 @@
+doctype html
+html(lang='en', ng-app='auction', ng-controller='AuctionCtrl')
+    head
+        meta(http-equiv='content-type', content='text/html; charset=utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+
+        title(ng-bind="pageTitle") Crossover Auction Game
+
+        link(rel='stylesheet', href='/css/angular-material.min.css')
+        link(rel='stylesheet', href='/css/font-awesome.min.css')
+        link(rel='stylesheet', href='/css/auction.min.css')
+    body
+        div(layout="column").ng-cloak
+            cb-menu
+
+            .page-content
+                block content
+
+            footer.page-footer
+                section
+                    .brand-copyright
+                        p Crossover Auction Game, 2016.
+
+
+        script(src='/js/jquery.min.js')
+        script(src='/js/angular.min.js')
+        script(src='/js/angular-ui-router.min.js')
+        script(src='/js/angular-cookies.min.js')
+        script(src='/js/angular-material.min.js')
+        script(src='/js/moment.min.js')
+        script(src='/js/auction.js')

@@ -1,0 +1,18 @@
+script(type="text/ng-template", id="auction-dialog.html")
+	md-dialog.new-auction(aria-label="Start Auction", ng-cloak)
+		form(name="auctionform", ng-submit="confirm(auction)")
+			md-dialog-content
+				.md-dialog-content
+					h2.md-headline New Auction
+					p Please, specify number of {{auction.item.item}}s.
+					md-input-container.md-block
+					md-input-container.md-block.md-title
+						label Quantity
+						input(required, type="number", name="auctionQuantity", ng-model="auction.quantity", min="1", max="{{auction.item.quantity}}")
+					md-input-container.md-block.md-title
+						label Minimum bid
+						input(required, type="number", name="auctionMinBid", ng-model="auction.min_bid", min="1")
+
+			md-dialog-actions(layout="row")
+				md-button.md-raised.md-accent(type="submit", ng-disabled="auctionform.$invalid")
+					span Ok

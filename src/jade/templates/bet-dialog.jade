@@ -1,0 +1,14 @@
+script(type="text/ng-template", id="bet-dialog.html")
+	md-dialog.new-auction(aria-label="Place a bid", ng-cloak)
+		form(name="betform", ng-submit="confirm(bet)")
+			md-dialog-content
+				.md-dialog-content
+					h2.md-headline Place Bid
+					md-input-container.md-block
+					md-input-container.md-block.md-title
+						label Your Bid
+						input(required, type="number", name="bid", ng-model="bet.bid", min="{{auction.bid || auction.min_bid}}", max="{{player.coins}}")
+
+			md-dialog-actions(layout="row")
+				md-button.md-raised.md-accent(type="submit", ng-disabled="betform.$invalid")
+					span Ok
