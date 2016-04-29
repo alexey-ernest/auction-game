@@ -1,5 +1,5 @@
 # Auction Game
-Auction game built on node.js and angular.js ([Angular Material](https://material.angularjs.org/latest/))
+Auction game built on node.js and angular.js ([Angular Material](https://material.angularjs.org/latest/)).
 
 * [Docker](#docker)
 * [Tests](#tests)
