@@ -88,7 +88,15 @@ CREATE INDEX auction_latest ON auctions (end_time);
 CREATE INDEX auction_current ON auctions (start_time, end_time);
 ```
 
-Then run a container with parameters, for example:
+Then run a container with parameters.
+
+| Parameter | Description |
+|------------|-----------|
+| POSTGRES_CONNECTION | Postgres connection string |
+| TOKEN_SECRET | Secret string for encryping JWT tokens |
+| DEBUG | Turn on debuggin information, should be 'auction-game:*' |
+
+For example:
 ```
 docker run -d --name auction -p 8080:8080 -e POSTGRES_CONNECTION=postgres://auction:auction@192.168.99.100:5432/auction -e SESSION_SECRET=secret -e DEBUG=auction-game:* auction
 ```
