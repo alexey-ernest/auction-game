@@ -2,5 +2,5 @@ script(type="text/ng-template", id="inventory.html")
 	ul
 		li(ng-repeat="i in inventory")
 			span {{i.item}} ({{i.quantity}})
-			md-button.md-raised(ng-click="auction(i, $event)") Auction
+			md-button.md-raised(ng-click="startAuction(i, $event)") Auction
 		

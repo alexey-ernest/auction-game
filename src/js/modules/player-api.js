@@ -9,9 +9,12 @@
 
       return {
         // Logs in by name
-        get: function (fn) {
-          $.get(url + '/player')
-            .done(function(result) {
+        get: function (token, fn) {
+          $.ajax({
+            url: url + '/player',
+            type: 'GET',
+            headers: {'Authorization': 'JWT ' + token}
+          }).done(function(result) {
               fn(null, result);
             })
             .fail(function(jqXHR, textStatus, err) {

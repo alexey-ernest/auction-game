@@ -18,8 +18,7 @@
             url: url + '/login',
             type: 'POST',
             data: data
-          })
-            .done(function(result, status, jqXHR) {
+          }).done(function(result, status, jqXHR) {
               fn(null, result);
             })
             .fail(function(jqXHR, textStatus, err) {
@@ -28,12 +27,12 @@
         },
 
         // Logs out
-        logout: function (fn) {
+        logout: function (token, fn) {
           $.ajax({
             url: url + '/logout',
-            type: 'DELETE'
-          })
-            .done(function(result) {
+            type: 'DELETE',
+            headers: {'Authorization': 'JWT ' + token}
+          }).done(function(result) {
               fn(null, result);
             })
             .fail(function(jqXHR, textStatus, err) {

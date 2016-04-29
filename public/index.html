@@ -14,9 +14,6 @@
       <div class="page-content">
         <div ui-view></div>
         <script type="text/ng-template" id="home.html">
-          <div flex="100" layout="row" layout-align="center center" layout-padding>
-            <h1 class="md-display-1">Hello, {{player.name}}</h1>
-          </div>
           <div layout="row" layout-align="center">
             <div flex="33" flex-sm="100" flex-md="33">
               <md-card>
@@ -90,7 +87,7 @@
         <script type="text/ng-template" id="inventory.html">
           <ul>
             <li ng-repeat="i in inventory"><span>{{i.item}} ({{i.quantity}})</span>
-              <md-button ng-click="auction(i, $event)" class="md-raised">Auction</md-button>
+              <md-button ng-click="startAuction(i, $event)" class="md-raised">Auction</md-button>
             </li>
           </ul>
         </script>
@@ -99,7 +96,7 @@
             <form name="auctionform" ng-submit="confirm(auction)">
               <md-dialog-content>
                 <div class="md-dialog-content">
-                  <h2 class="md-headline">New Auction</h2>
+                  <h2 class="md-title">Start new Auction</h2>
                   <p>Please, specify number of {{auction.item.item}}s.</p>
                   <md-input-container class="md-block"></md-input-container>
                   <md-input-container class="md-block md-title">
@@ -143,7 +140,7 @@
             <form name="betform" ng-submit="confirm(bet)">
               <md-dialog-content>
                 <div class="md-dialog-content">
-                  <h2 class="md-headline">Place Bid</h2>
+                  <h2 class="md-title">Place Bid</h2>
                   <md-input-container class="md-block"></md-input-container>
                   <md-input-container class="md-block md-title">
                     <label>Your Bid</label>

@@ -9,9 +9,12 @@
 
       return {
         // Gets player inventory
-        get: function (fn) {
-          $.get(url + '/inventory')
-            .done(function(result) {
+        get: function (token, fn) {
+          $.ajax({
+            url: url + '/inventory',
+            type: 'GET',
+            headers: {'Authorization': 'JWT ' + token}
+          }).done(function(result) {
               fn(null, result);
             })
             .fail(function(jqXHR, textStatus, err) {

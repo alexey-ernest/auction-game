@@ -4,11 +4,6 @@ if (!process.env.POSTGRES_CONNECTION) {
   process.exit(1);
 }
 
-if (!process.env.SESSION_SECRET) {
-  console.log("SESSION_SECRET environment variable required.");
-  process.exit(1);
-}
-
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');

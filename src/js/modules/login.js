@@ -4,7 +4,7 @@
     var module = angular.module('login', [
       'ui.router',
       'auth-api',
-      'player'
+      'access'
     ]);
 
     // Routes
@@ -16,7 +16,7 @@
             templateUrl: 'login.html',
             controller: 'LoginCtrl',
             data: {
-              pageTitle: 'Log in to the Auction Game'
+              pageTitle: 'Auction Game - Log in'
             }
           });
         }
@@ -24,8 +24,8 @@
 
     // Controllers
     module.controller('LoginCtrl', [
-      '$scope', '$state', 'authApi', 'player', '$mdDialog',
-      function ($scope, $state, authApi, player, $mdDialog) {
+      '$scope', '$state', 'authApi', 'access', '$mdDialog',
+      function ($scope, $state, authApi, access, $mdDialog) {
 
         $scope.login = {};
         $scope.loading = false;
@@ -39,11 +39,11 @@
               return $mdDialog.show($mdDialog.alert()
                 .clickOutsideToClose(true)
                 .title('Log in error')
-                .content('Something wrong with the server.')
+                .content('Something wrong with a server.')
                 .ok('Ok'));
             }
 
-            player.set(data);
+            access.token(data.token);
             $state.go('home');
           });
         };

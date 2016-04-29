@@ -1,7 +1,9 @@
 (function(window, angular) {
   "use strict";
 
-  var module = angular.module('auction-api', ['settings']);
+  var module = angular.module('auction-api', [
+    'settings'
+  ]);
 
   module.factory('auctionApi', [
     'urls', function (urls) {
@@ -10,14 +12,19 @@
       return {
         
         // Adds auction to the queue
-        start: function (item, quantity, min_bid, fn) {
+        start: function (token, item, quantity, min_bid, fn) {
           var data = {
             item: item,
             quantity: quantity,
             min_bid: min_bid
           };
-          $.post(url + '/auction', data)
-            .done(function(result) {
+
+          $.ajax({
+            url: url + '/auction',
+            type: 'POST',
+            headers: {'Authorization': 'JWT ' + token},
+            data: data
+          }).done(function(result) {
               fn(null, result);
             })
             .fail(function(jqXHR, textStatus, err) {
@@ -26,12 +33,17 @@
         },
 
         // Makes a bet
-        bet: function (bid, fn) {
+        bet: function (token, bid, fn) {
           var data = {
             bid: bid
           };
-          $.post(url + '/auction/bet', data)
-            .done(function(result) {
+
+          $.ajax({
+            url: url + '/auction/bet',
+            type: 'POST',
+            headers: {'Authorization': 'JWT ' + token},
+            data: data
+          }).done(function(result) {
               fn(null, result);
             })
             .fail(function(jqXHR, textStatus, err) {
@@ -40,9 +52,12 @@
         },
 
         // Gets current auction
-        getCurrent: function (fn) {
-          $.get(url + '/auction')
-            .done(function(result) {
+        getCurrent: function (token, fn) {
+          $.ajax({
+            url: url + '/auction',
+            type: 'GET',
+            headers: {'Authorization': 'JWT ' + token}
+          }).done(function(result) {
               fn(null, result);
             })
             .fail(function(jqXHR, textStatus, err) {
@@ -51,9 +66,12 @@
         },
 
         // Gets latest
-        getLatest: function (fn) {
-          $.get(url + '/auction/latest')
-            .done(function(result) {
+        getLatest: function (token, fn) {
+          $.ajax({
+            url: url + '/auction/latest',
+            type: 'GET',
+            headers: {'Authorization': 'JWT ' + token}
+          }).done(function(result) {
               fn(null, result);
             })
             .fail(function(jqXHR, textStatus, err) {

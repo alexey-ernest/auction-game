@@ -3,7 +3,7 @@
 
     var module = angular.module('home', [
       'ui.router',
-      'player'
+      'access'
     ]);
 
     // Routes
@@ -23,14 +23,11 @@
 
     // Controllers
     module.controller('HomeCtrl', [
-      '$scope', '$state', 'player',
-      function ($scope, $state, player) {
-        player = player.get();
-        if (!player) {
+      '$scope', '$state', 'access',
+      function ($scope, $state, access) {
+        if (!access.token()) {
           return $state.go('login');
         }
-
-        $scope.player = player;
       }
     ]);
     

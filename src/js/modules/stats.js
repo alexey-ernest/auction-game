@@ -1,43 +1,55 @@
-angular.module('stats', ['player-api', 'auth-api']).directive('auctionStats', [
-  '$interval', 'playerApi', 'player', '$state', 'authApi', function($interval, playerApi, player, $state, authApi) {
+(function (angular) {
+  "use strict";
 
-    return {
-      restrict: 'EA',
-      scope: {},
-      templateUrl: 'stats.html',
-      link: function($scope, element) {
-        $scope.player = player.get();
+  var module = angular.module('stats', [
+    'player-api', 
+    'auth-api', 
+    'access', 
+    'player'
+  ]);
+  
+  module.directive('auctionStats', [
+    '$interval', 'playerApi', 'player', '$state', 'authApi', 'access',
+    function($interval, playerApi, player, $state, authApi, access) {
 
-        // polling player data
-        var timeoutId = $interval(function() {
-          if (!player.get()) return;
+      return {
+        restrict: 'EA',
+        scope: {},
+        templateUrl: 'stats.html',
+        link: function($scope, element) {
+          $scope.player = player.get();
 
-          playerApi.get(function (err, data) {
-            if (err && err.status === 401) {
-              return $state.go('login');
-            }
+          // polling player data
+          var timeoutId = $interval(function() {
+            if (!access.token()) return;
 
-            if (err) return console.error(err);
+            playerApi.get(access.token(), function (err, data) {
+              if (err && err.status === 401) {
+                access.token(null);
+                return $state.go('login');
+              }
 
-            if (err) return console.error(err);
-            player.set(data);
-            $scope.player = data;
+              if (err) return console.error(err);
+
+              player.set(data);
+              $scope.player = data;
+            });
+          }, 1000);
+
+          // destructor
+          $scope.$on('$destroy', function() {
+            $interval.cancel(timeoutId);
           });
-        }, 1000);
 
-        // destructor
-        $scope.$on('$destroy', function() {
-          $interval.cancel(timeoutId);
-        });
+          $scope.logout = function () {
+            authApi.logout(access.get(), function (err) {
+              if (err) return console.error(err);
+              access.token(null);
+              $state.go('login');
+            });
+          };
+        }
+      };
+  }]);
 
-
-        $scope.logout = function () {
-          authApi.logout(function (err) {
-            if (err) return console.error(err);
-            $state.go('login');
-          });
-        };
-      }
-    };
-  }
-]);
+})(window.angular);
