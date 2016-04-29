@@ -36,9 +36,10 @@ angular.module('game', ['auction-api']).directive('auctionGame', [
                 $scope.latest = latest;
               });
             } else {
-              var end = moment.utc(data.end_time);
+              console.log('End time: ' + data.end_time.toISOString());
+              console.log('Now: ' + (new Date()).toISOString());
+              var end = moment(data.end_time);
               var now = moment();
-              now = now.add(-now.utcOffset(), 'm').utc(); // convert current time to UTC
               $scope.timeLeft = end.diff(now, 's');
             }
             

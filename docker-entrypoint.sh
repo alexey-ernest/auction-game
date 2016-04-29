@@ -6,7 +6,10 @@ if [ -z "$POSTGRES_CONNECTION" ]; then
     exit 1
 fi
 
-echo "POSTGRES: ${POSTGRES_CONNECTION}"
+if [ -z "$TOKEN_SECRET" ]; then
+    echo "TOKEN_SECRET environment variable required"
+    exit 1
+fi
 
 # execute nodejs application
 exec npm start

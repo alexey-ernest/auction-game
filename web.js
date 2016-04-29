@@ -13,26 +13,12 @@ var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
-var session = require('express-session');
 var pg = require('pg');
-var pgSession = require('connect-pg-simple')(session);
 
 var routes = require('./routes');
 var api = require('./routes/api');
 
 var app = express();
-
-// session
-app.use(session({
-  store: new pgSession({
-    pg : pg,
-    conString : process.env.POSTGRES_CONNECTION,
-    tableName : 'session'
-  }),
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days 
-}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

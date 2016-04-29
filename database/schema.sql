@@ -14,21 +14,10 @@ ALTER SEQUENCE players_serial owned by players.id;
 
 -- Session
 
-CREATE TABLE session (
-    sid varchar NOT NULL COLLATE "default",
-    sess json NOT NULL,
-    expire timestamp(6) NOT NULL
-);
-
-ALTER TABLE session ADD CONSTRAINT session_pkey PRIMARY KEY (sid) NOT DEFERRABLE INITIALLY IMMEDIATE;
-
-
 CREATE TABLE player_sessions (
-    sid varchar NOT NULL PRIMARY KEY,
-    player_id integer NOT NULL REFERENCES players ON DELETE CASCADE
+    player_id integer NOT NULL PRIMARY KEY REFERENCES players ON DELETE CASCADE,
+    session_id varchar NOT NULL
 );
-
-CREATE INDEX player_session ON player_sessions (player_id);
 
 
 -- Inventory
