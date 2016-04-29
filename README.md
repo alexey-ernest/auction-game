@@ -94,7 +94,7 @@ Then run a container with parameters.
 |------------|-----------|
 | POSTGRES_CONNECTION | Postgres connection string |
 | TOKEN_SECRET | Secret string for encryping JWT tokens |
-| DEBUG | Turn on debuggin information, should be 'auction-game:*' |
+| DEBUG | Turn on debugging information, should be `auction-game:*` |
 
 For example:
 ```
