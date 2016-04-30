@@ -99,6 +99,8 @@ gulp.task('libs', [
 ]);
 
 
+// Static resources
+
 // common
 gulp.task('common', function () {
   return gulp.src('src/*.*')
@@ -107,7 +109,7 @@ gulp.task('common', function () {
 
 // images
 gulp.task('images', function () {
-  return gulp.src('src/images/*.*')
+  return gulp.src('static/images/*.*')
     .pipe(gulp.dest('public/images'));
 });
 
@@ -115,7 +117,7 @@ gulp.task('images', function () {
 gulp.task('jade', function () {
   var YOUR_LOCALS = {};
 
-  return gulp.src('src/jade/index.jade')
+  return gulp.src('static/jade/index.jade')
     .pipe(jade({
       pretty: true,
       locals: YOUR_LOCALS
@@ -126,7 +128,7 @@ gulp.task('jade', function () {
 
 // stylus
 gulp.task('stylus', function () {
-  gulp.src('src/stylus/index.styl')
+  gulp.src('static/stylus/index.styl')
     .pipe(stylus({
       compress: true
     }))
@@ -137,8 +139,8 @@ gulp.task('stylus', function () {
 // js
 gulp.task('js', function () {
   return gulp.src([
-      'src/js/modules/*.js',
-      'src/js/*.js',
+      'static/js/modules/*.js',
+      'static/js/*.js',
     ])
     .pipe(concat('auction.js'))
     //.pipe(uglify())
@@ -146,7 +148,26 @@ gulp.task('js', function () {
     .pipe(gulp.dest('public/js'));
 });
 
+// icons
+gulp.task('icon-fonts', function () {
+  return gulp.src([
+    'static/icons/Flaticon.eot', 
+    'static/icons/Flaticon.svg', 
+    'static/icons/Flaticon.ttf', 
+    'static/icons/Flaticon.woff'
+    ])
+    .pipe(gulp.dest('public/fonts'));
+});
+gulp.task('icon-css', function () {
+  return gulp.src('static/icons/flaticon.css')
+    .pipe(minifyCss())
+    .pipe(rename({ extname: '.min.css' }))
+    .pipe(gulp.dest('public/css'));
+});
+gulp.task('icons', ['icon-fonts', 'icon-css']);
+
+
 // auction application
-gulp.task('auction', ['common', 'images', 'jade', 'stylus', 'js']);
+gulp.task('auction', ['common', 'images', 'jade', 'stylus', 'js', 'icons']);
 
 gulp.task('default', ['libs', 'auction']);
