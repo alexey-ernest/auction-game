@@ -4,16 +4,24 @@
   var module = angular.module('inventory', [
     'inventory-api', 
     'auction-api', 
-    'access'
+    'access',
+    'icons'
   ]);
 
   module.directive('auctionInventory', [
-    '$interval', 'inventoryApi', 'auctionApi', 'player', 'access', '$mdDialog',
-    function($interval, inventoryApi, auctionApi, player, access, $mdDialog) {
+    '$interval', 'inventoryApi', 'auctionApi', 'player', 'access', 'icons', '$mdDialog',
+    function($interval, inventoryApi, auctionApi, player, access, icons, $mdDialog) {
+
+      function applyIcons(items) {
+        items.forEach(function (i) {
+          i.icon = icons.getIcon(i.item);
+        });
+      }
 
       return {
         restrict: 'EA',
         scope: {},
+        replace: true,
         templateUrl: 'inventory.html',
         link: function($scope, element) {
           $scope.loading = false;
@@ -31,6 +39,7 @@
               $scope.loading = false;
               if (err) return console.error(err);
               
+              applyIcons(items);
               $scope.inventory = items;
             });
           }, 1000);

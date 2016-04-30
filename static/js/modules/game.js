@@ -3,22 +3,25 @@
 
   var module = angular.module('game', [
     'auction-api', 
-    'access'
+    'access',
+    'icons'
   ]);
 
   module.directive('auctionGame', [
-    '$interval', 'auctionApi', 'player', 'access', '$mdDialog',
-    function($interval, auctionApi, player, access, $mdDialog) {
+    '$interval', 'auctionApi', 'player', 'access', 'icons', '$mdDialog',
+    function($interval, auctionApi, player, access, icons, $mdDialog) {
 
       return {
         restrict: 'EA',
         scope: {},
+        replace: true,
         templateUrl: 'game.html',
         link: function($scope, element) {
           $scope.loading = false;
           $scope.auction = null;
           $scope.latest = null;
           $scope.timeLeft = 0;
+          $scope.canBet = false;
 
           $scope.player = player.get();
           $scope.$watch(function() { 
@@ -47,16 +50,23 @@
                   if (latest && !latest.id) {
                     latest = null;
                   }
+                  if (latest) {
+                    latest.icon = icons.getIcon(latest.item);
+                  }
                   $scope.latest = latest;
                 });
               } else {
                 var end = moment(data.end_time);
                 var now = moment();
                 $scope.timeLeft = end.diff(now, 's');
+                $scope.canBet = $scope.player && $scope.player.id !== data.seller;
+
+                data.icon = icons.getIcon(data.item);
+                data.min_bid = data.bid ? data.bid + 1 : data.min_bid;
               }
               
               $scope.latest = null;
-              $scope.auction = data;  
+              $scope.auction = data;
             });
           }, 1000);
 

@@ -1,65 +1,72 @@
-@import colors
-
 body, html
-    background-color: bg
-    color: body-text
+    background-color: #f9f9f9
 
-// Page content
-.page-content
-    padding: 50px 20px 100px 20px
+.auction-status
+    height: 25px
+    min-height: 25px
 
-// Footer
-.page-footer
-    background: footer-bg
-    color: footer-text
-    font-size: 13px
-    padding: 40px 0 20px
-    
-    section
-        max-width: 1014px
-        padding: 0 1.5rem
-        margin: 0 auto
+.auction-stats
+	min-height: 60px
+	padding: 0 15px
 
-    p
-        margin-bottom: 5px
+.auction-primary
+    min-height: 180px
+    padding-bottom: 20px
+    position: relative
+    text-align: center
 
-    .brand-copyright
-        font-size: 10px
-        margin-bottom: 30px
-        
-        [class^=mdi-]
-        [class*=mdi-]
-            font-size: 14px
+    .md-display-2
+    	margin: 0
 
-    for n in 1..6
-        h{n}
-            color: footer-heading
-    
-    a
-        color: footer-text
-        text-decoration: none
-        font-weight: bold
-        
-        &:hover
-            color: footer-text-hover
-            text-decoration: underline
-    
-    ul.bottom-menu
-        margin: 0 0 30px
-        padding: 0
+    .md-subhead
+    	margin: 0
 
-        li
-            list-style: none
-            margin-bottom: 10px
+.auction-button
+	position: absolute
+	top: 180px
+	left: 50%
+	margin-left: -28px !important
+	margin-top: -28px !important
 
-@media (max-width: 960px)
-    .page-footer
-        text-align: center
+	&[disabled]
+		background-color: #dadada !important
 
-md-dialog.new-auction
+
+.auction-secondary
+	min-height: 100px
+
+.auction-secondary-annotation
+	padding: 40px
+
+.inventory-items
+	margin: 0
+	padding: 0
+
+	li
+		padding: 25px 15px
+		border-bottom: 1px solid #d9d9d9
+
+	.inventory-item-icon i
+		color: #717171
+		font-size: 30px
+
+	.inventory-item-info
+		.md-title
+			color: #212121
+			font-size: 16px
+			margin: 0
+		.md-subhead
+			color: #727272
+			font-size: 15px
+			margin: 0
+
+md-dialog.auction-dialog
     width: 400px
 
 // Font Awesome
+md-icon.fa
+	font-size: 24px
+
 .fa-spin.faster
     -webkit-animation: fa-spin 1s infinite linear;
     animation: fa-spin 1s infinite linear; 

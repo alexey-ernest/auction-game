@@ -1,10 +1,19 @@
 script(type="text/ng-template", id="stats.html")
-	p
-		span Name: 
-		span {{player.name}}
-	p
-		span Coins: 
-		span {{player.coins}}
-	p
-		md-button.md-raised(ng-click="logout()")
-			span Logout
+	
+	div(flex="100", layout="row", layout-align="start center")
+		div.md-subhead(ng-if="player", title="Your balance")
+			i.flaticon-coins 
+			span {{player.coins}}
+		div(flex)
+		div
+			md-menu(md-position-mode="target-right target")
+				md-button.md-icon-button(aria-label="Player Menu", ng-click="$mdOpenMenu($event)")
+					span(md-menu-origin)
+						i.fa.fa-ellipsis-v
+				md-menu-content(width="2")
+					md-menu-item(ng-if="player")
+						md-button(disabled="disabled")
+							span {{player.name}}
+					md-menu-item
+						md-button(ng-click="logout()")
+							span(md-menu-align-target) Logout

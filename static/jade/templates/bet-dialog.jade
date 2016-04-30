@@ -10,5 +10,5 @@ script(type="text/ng-template", id="bet-dialog.html")
 						input(required, type="number", name="bid", ng-model="bet.bid", min="{{auction.bid || auction.min_bid}}", max="{{player.coins}}")
 
 			md-dialog-actions(layout="row")
-				md-button.md-raised.md-accent(type="submit", ng-disabled="betform.$invalid")
+				md-button.md-primary(type="submit", ng-disabled="betform.$invalid")
 					span Ok

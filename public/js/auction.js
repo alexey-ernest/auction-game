@@ -152,22 +152,25 @@
 
   var module = angular.module('game', [
     'auction-api', 
-    'access'
+    'access',
+    'icons'
   ]);
 
   module.directive('auctionGame', [
-    '$interval', 'auctionApi', 'player', 'access', '$mdDialog',
-    function($interval, auctionApi, player, access, $mdDialog) {
+    '$interval', 'auctionApi', 'player', 'access', 'icons', '$mdDialog',
+    function($interval, auctionApi, player, access, icons, $mdDialog) {
 
       return {
         restrict: 'EA',
         scope: {},
+        replace: true,
         templateUrl: 'game.html',
         link: function($scope, element) {
           $scope.loading = false;
           $scope.auction = null;
           $scope.latest = null;
           $scope.timeLeft = 0;
+          $scope.canBet = false;
 
           $scope.player = player.get();
           $scope.$watch(function() { 
@@ -196,16 +199,23 @@
                   if (latest && !latest.id) {
                     latest = null;
                   }
+                  if (latest) {
+                    latest.icon = icons.getIcon(latest.item);
+                  }
                   $scope.latest = latest;
                 });
               } else {
                 var end = moment(data.end_time);
                 var now = moment();
                 $scope.timeLeft = end.diff(now, 's');
+                $scope.canBet = $scope.player && $scope.player.id !== data.seller;
+
+                data.icon = icons.getIcon(data.item);
+                data.min_bid = data.bid ? data.bid + 1 : data.min_bid;
               }
               
               $scope.latest = null;
-              $scope.auction = data;  
+              $scope.auction = data;
             });
           }, 1000);
 
@@ -303,6 +313,28 @@
     ]);
     
 })(window, window.angular);
+(function (window, angular) {
+  "use strict";
+
+  var module = angular.module('icons', []);
+
+  var icons = {
+    'bread': 'flaticon-bread-silhouette-side-view',
+    'carrot': 'flaticon-carrot',
+    'diamond': 'flaticon-jewelry-stone',
+    'default': 'fa fa-star-o'
+  };
+
+  module.factory('icons', [function () {
+    var token;
+    return {
+      getIcon: function (item) {
+        return icons[item] || icons['default'];
+      }
+    };
+  }]);
+
+})(window, window.angular);
 (function(window, angular) {
   "use strict";
 
@@ -337,16 +369,24 @@
   var module = angular.module('inventory', [
     'inventory-api', 
     'auction-api', 
-    'access'
+    'access',
+    'icons'
   ]);
 
   module.directive('auctionInventory', [
-    '$interval', 'inventoryApi', 'auctionApi', 'player', 'access', '$mdDialog',
-    function($interval, inventoryApi, auctionApi, player, access, $mdDialog) {
+    '$interval', 'inventoryApi', 'auctionApi', 'player', 'access', 'icons', '$mdDialog',
+    function($interval, inventoryApi, auctionApi, player, access, icons, $mdDialog) {
+
+      function applyIcons(items) {
+        items.forEach(function (i) {
+          i.icon = icons.getIcon(i.item);
+        });
+      }
 
       return {
         restrict: 'EA',
         scope: {},
+        replace: true,
         templateUrl: 'inventory.html',
         link: function($scope, element) {
           $scope.loading = false;
@@ -364,6 +404,7 @@
               $scope.loading = false;
               if (err) return console.error(err);
               
+              applyIcons(items);
               $scope.inventory = items;
             });
           }, 1000);
@@ -435,7 +476,8 @@
     var module = angular.module('login', [
       'ui.router',
       'auth-api',
-      'access'
+      'access',
+      'player'
     ]);
 
     // Routes
@@ -455,8 +497,8 @@
 
     // Controllers
     module.controller('LoginCtrl', [
-      '$scope', '$state', 'authApi', 'access', '$mdDialog',
-      function ($scope, $state, authApi, access, $mdDialog) {
+      '$scope', '$state', 'authApi', 'access', 'player', '$mdDialog',
+      function ($scope, $state, authApi, access, player, $mdDialog) {
 
         $scope.login = {};
         $scope.loading = false;
@@ -475,6 +517,7 @@
             }
 
             access.token(data.token);
+            player.set(null);
             $state.go('home');
           });
         };
@@ -555,6 +598,7 @@
       return {
         restrict: 'EA',
         scope: {},
+        replace: true,
         templateUrl: 'stats.html',
         link: function($scope, element) {
           $scope.player = player.get();
@@ -582,7 +626,7 @@
           });
 
           $scope.logout = function () {
-            authApi.logout(access.get(), function (err) {
+            authApi.logout(access.token(), function (err) {
               if (err) return console.error(err);
               access.token(null);
               $state.go('login');
@@ -621,14 +665,29 @@
 
       $urlRouterProvider.otherwise('/');
 
-      // theme
+      // defining themes
+      var lightGreenTheme = $mdThemingProvider.extendPalette('light-green', {
+        'contrastLightColors': ['500']
+      });
+      $mdThemingProvider.definePalette('light-green-auction', lightGreenTheme);
+
+      var deepPurpleTheme = $mdThemingProvider.extendPalette('deep-purple', {
+        'contrastLightColors': ['500']
+      });
+      $mdThemingProvider.definePalette('deep-purple-auction', deepPurpleTheme);
+
+      // configuring themes
       $mdThemingProvider.theme('default')
-        .primaryPalette('grey')
-        .accentPalette('green', {
+        .backgroundPalette('grey', {
+          'default': '100'
+        })
+        .primaryPalette('deep-purple-auction', {
           'default': '500',
-          'hue-1': '200',
-          'hue-2': '700',
-          'hue-3': 'A200'
+          'hue-1': '700',
+          'hue-2': '100'
+        })
+        .accentPalette('light-green-auction', {
+          'default': '500'
         });
     }
   ]);

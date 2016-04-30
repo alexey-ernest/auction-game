@@ -15,6 +15,7 @@
       return {
         restrict: 'EA',
         scope: {},
+        replace: true,
         templateUrl: 'stats.html',
         link: function($scope, element) {
           $scope.player = player.get();
@@ -42,7 +43,7 @@
           });
 
           $scope.logout = function () {
-            authApi.logout(access.get(), function (err) {
+            authApi.logout(access.token(), function (err) {
               if (err) return console.error(err);
               access.token(null);
               $state.go('login');

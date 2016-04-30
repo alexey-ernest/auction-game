@@ -1,43 +1,30 @@
 script(type="text/ng-template", id="game.html")
-	div(ng-if="auction")
-		p
-			span Seller: 
-			span {{auction.seller_name}}
-		p
-			span Item Name: 
-			span {{auction.item}}
 
-		p
-			span Quantity: 
-			span {{auction.quantity}}
+	.md-toolbar-tools(flex="100", layout="column", layout-align="center center")
+		//- current auction
+		div(ng-if="auction")
+			p.md-display-2
+				span {{auction.quantity}} 
+				i(class="{{auction.icon}}") 
+				span for {{auction.min_bid}} 
+				i.flaticon-coins 
+			p.md-subhead
+				span From {{auction.seller_name}}. Only {{timeLeft}}s left
 
-		p
-			span Time Left: {{timeLeft}}s
+		//- winner
+		div(ng-if="!auction && latest && latest.winner")
+			p.md-display-2
+				span {{latest.winner_name}} won!
+			p.md-subhead
+				span {{latest.quantity}} 
+				i(class="{{latest.icon}}") 
+				span were sold for {{latest.bid}} 
+				i.flaticon-coins 
+				span by {{latest.seller_name}}.
 
-		p
-			span Winning Bid: 
-			span {{auction.bid || auction.min_bid}}
+		//- no auctions
+		div(ng-if="!auction && (!latest || !latest.winner)")
+			p.md-subhead There are no active auctions. Sell something to start new one.
 
-		md-button.md-raised.md-accent(ng-if="player.id !== auction.seller", ng-click="doBet($event)") Place a Bid
-
-	div(ng-if="!auction && latest && latest.winner")
-		p
-			span Congrtulations! The winner is {{latest.winner_name}}.
-
-		p
-			span Seller: 
-			span {{latest.seller_name}}
-		p
-			span Item Name: 
-			span {{latest.item}}
-
-		p
-			span Quantity: 
-			span {{latest.quantity}}
-
-		p
-			span Winning Bid: 
-			span {{latest.bid}}
-
-	div(ng-if="!auction && (!latest || !latest.winner)")
-		p There are no active auctions. Start new one.
+		md-button.md-fab.md-raised.md-accent.auction-button(ng-disabled="!auction || !canBet", ng-click="doBet($event)")
+			md-icon.fa.fa-thumbs-up

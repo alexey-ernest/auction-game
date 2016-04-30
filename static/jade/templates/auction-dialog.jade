@@ -1,5 +1,5 @@
 script(type="text/ng-template", id="auction-dialog.html")
-	md-dialog.new-auction(aria-label="Start Auction", ng-cloak)
+	md-dialog.auction-dialog(aria-label="Start Auction", ng-cloak)
 		form(name="auctionform", ng-submit="confirm(auction)")
 			md-dialog-content
 				.md-dialog-content
@@ -14,5 +14,5 @@ script(type="text/ng-template", id="auction-dialog.html")
 						input(required, type="number", name="auctionMinBid", ng-model="auction.min_bid", min="1")
 
 			md-dialog-actions(layout="row")
-				md-button.md-raised.md-accent(type="submit", ng-disabled="auctionform.$invalid")
+				md-button.md-primary(type="submit", ng-disabled="auctionform.$invalid")
 					span Ok

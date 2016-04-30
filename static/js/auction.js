@@ -25,14 +25,29 @@
 
       $urlRouterProvider.otherwise('/');
 
-      // theme
+      // defining themes
+      var lightGreenTheme = $mdThemingProvider.extendPalette('light-green', {
+        'contrastLightColors': ['500']
+      });
+      $mdThemingProvider.definePalette('light-green-auction', lightGreenTheme);
+
+      var deepPurpleTheme = $mdThemingProvider.extendPalette('deep-purple', {
+        'contrastLightColors': ['500']
+      });
+      $mdThemingProvider.definePalette('deep-purple-auction', deepPurpleTheme);
+
+      // configuring themes
       $mdThemingProvider.theme('default')
-        .primaryPalette('grey')
-        .accentPalette('green', {
+        .backgroundPalette('grey', {
+          'default': '100'
+        })
+        .primaryPalette('deep-purple-auction', {
           'default': '500',
-          'hue-1': '200',
-          'hue-2': '700',
-          'hue-3': 'A200'
+          'hue-1': '700',
+          'hue-2': '100'
+        })
+        .accentPalette('light-green-auction', {
+          'default': '500'
         });
     }
   ]);

@@ -4,7 +4,8 @@
     var module = angular.module('login', [
       'ui.router',
       'auth-api',
-      'access'
+      'access',
+      'player'
     ]);
 
     // Routes
@@ -24,8 +25,8 @@
 
     // Controllers
     module.controller('LoginCtrl', [
-      '$scope', '$state', 'authApi', 'access', '$mdDialog',
-      function ($scope, $state, authApi, access, $mdDialog) {
+      '$scope', '$state', 'authApi', 'access', 'player', '$mdDialog',
+      function ($scope, $state, authApi, access, player, $mdDialog) {
 
         $scope.login = {};
         $scope.loading = false;
@@ -44,6 +45,7 @@
             }
 
             access.token(data.token);
+            player.set(null);
             $state.go('home');
           });
         };

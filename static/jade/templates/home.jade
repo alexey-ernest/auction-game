@@ -1,23 +1,10 @@
 script(type="text/ng-template", id="home.html")
-    div(layout="row", layout-align="center")
-        div(flex="33", flex-sm="100", flex-md="33")
-            md-card
-                md-card-title
-                    md-card-title-text
-                        span.md-headline Player Stats
-                md-card-content
-                    auction-stats
-        div(flex="33", flex-sm="100", flex-md="33")
-            md-card
-                md-card-title
-                    md-card-title-text
-                        span.md-headline Inventory
-                md-card-content
-                    auction-inventory
-        div(flex="33", flex-sm="100", flex-md="33")
-            md-card
-                md-card-title
-                    md-card-title-text
-                        span.md-headline Auction
-                md-card-content
-                    auction-game
+
+    div(layout="column")
+        md-toolbar.md-primary.md-hue-1.auction-status
+        md-toolbar.md-primary.auction-stats(layout="column")
+            auction-stats
+        md-toolbar.md-primary.auction-primary(layout="column")
+            auction-game
+        md-content.auction-secondary
+            auction-inventory

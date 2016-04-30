@@ -8,20 +8,11 @@ html(lang='en', ng-app='auction', ng-controller='AuctionCtrl')
 
         link(rel='stylesheet', href='/css/angular-material.min.css')
         link(rel='stylesheet', href='/css/font-awesome.min.css')
-        link(rel='stylesheet', href='/css/font-awesome.min.css')
         link(rel='stylesheet', href='/css/flaticon.min.css')
+        link(rel='stylesheet', href='/css/auction.min.css')
     body
-        div(layout="column").ng-cloak
-            cb-menu
-
-            .page-content
-                block content
-
-            footer.page-footer
-                section
-                    .brand-copyright
-                        p Crossover Auction Game, 2016.
-
+        div.ng-cloak
+            block content
 
         script(src='/js/jquery.min.js')
         script(src='/js/angular.min.js')
