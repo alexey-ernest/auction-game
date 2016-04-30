@@ -45,9 +45,7 @@
                 });
               } else {
                 var end = moment(data.end_time);
-                var now = moment().add(-moment().utcOffset(), 'm');
-                console.log('End time: ' + end.toISOString());
-                console.log('Now: ' + now.toISOString());
+                var now = moment();
                 $scope.timeLeft = end.diff(now, 's');
               }
               

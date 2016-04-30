@@ -82,10 +82,9 @@ router.get('/latest',
       }
 
       // showing latest for 10 seconds only
-      var end_time = moment.utc(auction.end_time);
-      var now = moment();
-      now = now.add(-now.utcOffset(), 'm').utc(); // convert current time to UTC
-      if (now.diff(end_time, 's') > 10) {
+      var endMoment = moment(auction.end_time);
+      var nowMoment = moment();
+      if (nowMoment.diff(endMoment, 's') > 10) {
         return res.json({});
       }
 

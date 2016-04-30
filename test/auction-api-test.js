@@ -7,6 +7,7 @@ var request = require('supertest');
 var uuid = require('node-uuid');
 var common = require('./common');
 var auctionService = require('../lib/auction-service');
+var moment = require('moment');
 
 var chai = require('chai');
 chai.should();
@@ -178,9 +179,12 @@ describe('/api/auction', function () {
             if (err) return done(err);
             
             var auction = res.body;
-
             auction.should.have.property('id');
+
             auction.should.have.property('created');
+            var createdMoment = moment(auction.created);
+            var nowMoment = moment();
+            expect(nowMoment.diff(createdMoment, 's')).to.equal(0);
 
             auction.should.have.property('seller');
             auction.seller.should.equal(player.id);
@@ -272,6 +276,7 @@ describe('/api/auction', function () {
       });
     });
 
+    var auctionDuration = 3;
     var current_player;
     it('should start auction', function (done) {
       common.login(function (err, token) {
@@ -300,7 +305,7 @@ describe('/api/auction', function () {
                 if (err) return done(err);
 
                 current_player = res.body;
-                auctionService.startAuction(3, done);
+                auctionService.startAuction(auctionDuration, done);
               });
           });
         });
@@ -318,10 +323,17 @@ describe('/api/auction', function () {
             if (err) return done(err);
             
             current_auction = res.body;
+
             current_auction.should.have.property('seller');
             current_auction.seller.should.equal(current_player.id);
             current_auction.should.have.property('seller_name');
             current_auction.seller_name.should.equal(current_player.name);
+
+            var nowMoment = moment();
+            var startMoment = moment(current_auction.start_time);
+            var endMoment = moment(current_auction.end_time);
+            expect(nowMoment.diff(startMoment, 's')).to.equal(0);
+            expect(endMoment.diff(startMoment, 's')).to.equal(auctionDuration);
 
             common.doneAndDeregister(token, done)();
           });
@@ -449,6 +461,11 @@ describe('/api/auction', function () {
                 auction.bid.should.equal(bid);
                 auction.winner.should.equal(player.id);
                 auction.winner_name.should.equal(player.name);
+
+                var nowMoment = moment();
+                var endMoment = moment(auction.end_time);
+                expect(Math.abs(endMoment.diff(nowMoment, 's') - 10) <= 1).to.be.true;
+
                 current_auction = auction;
 
                 common.doneAndDeregister(token, done)();
@@ -473,7 +490,7 @@ describe('/api/auction', function () {
       });
     });
 
-    it('should not get auction if it is expired', function (done) {
+    it('should not get current auction if it is expired', function (done) {
       this.timeout(3 * 1000);
 
       common.login(function (err, token) {

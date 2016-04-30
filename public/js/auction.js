@@ -187,16 +187,18 @@
                 auctionApi.getLatest(access.token(), function (err, latest) {
                   if (err) return console.error(err);
                   
-                  if (!latest.id) {
+                  if (latest && !latest.id) {
                     latest = null;
                   }
                   $scope.latest = latest;
                 });
               } else {
                 var end = moment(data.end_time);
-                var now = moment().add(-moment().utcOffset(), 'm');
-                console.log('End time: ' + end.toISOString());
-                console.log('Now: ' + now.toISOString());
+                var now = moment();
+                console.log('End time:');
+                console.log(end);
+                console.log('Now time:');
+                console.log(now);
                 $scope.timeLeft = end.diff(now, 's');
               }
               
