@@ -165,10 +165,16 @@
         templateUrl: 'game.html',
         link: function($scope, element) {
           $scope.loading = false;
-          $scope.player = player.get();
           $scope.auction = null;
           $scope.latest = null;
           $scope.timeLeft = 0;
+
+          $scope.player = player.get();
+          $scope.$watch(function() { 
+            return player.get();
+          }, function(value) {
+            $scope.player = value;
+          });
 
           var $baseScope = $scope;
 
@@ -195,10 +201,6 @@
               } else {
                 var end = moment(data.end_time);
                 var now = moment();
-                console.log('End time:');
-                console.log(end);
-                console.log('Now time:');
-                console.log(now);
                 $scope.timeLeft = end.diff(now, 's');
               }
               

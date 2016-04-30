@@ -16,10 +16,16 @@
         templateUrl: 'game.html',
         link: function($scope, element) {
           $scope.loading = false;
-          $scope.player = player.get();
           $scope.auction = null;
           $scope.latest = null;
           $scope.timeLeft = 0;
+
+          $scope.player = player.get();
+          $scope.$watch(function() { 
+            return player.get();
+          }, function(value) {
+            $scope.player = value;
+          });
 
           var $baseScope = $scope;
 
