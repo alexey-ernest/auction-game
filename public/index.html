@@ -77,18 +77,23 @@
         </div>
       </script>
       <script type="text/ng-template" id="inventory.html">
-        <ul class="inventory-items">
-          <li ng-repeat="i in inventory" layout="row">
-            <div layout="row" layout-align="center center" class="inventory-item-icon"><i class="{{i.icon}}"></i></div>
-            <div flex class="inventory-item-info">
-              <h2 class="md-title">{{i.item}}</h2>
-              <p class="md-subhead">{{i.quantity}} items</p>
-            </div>
-            <div class="inventory-item-action">
-              <md-button ng-click="startAuction(i, $event)">Sell</md-button>
-            </div>
-          </li>
-        </ul>
+        <div>
+          <ul class="inventory-items">
+            <li ng-repeat="i in inventory" layout="row">
+              <div layout="row" layout-align="center center" class="inventory-item-icon"><i class="{{i.icon}}"></i></div>
+              <div flex class="inventory-item-info">
+                <h2 class="md-title">{{i.item}}</h2>
+                <p class="md-subhead">{{i.quantity}} items</p>
+              </div>
+              <div class="inventory-item-action">
+                <md-button ng-click="startAuction(i, $event)">Sell</md-button>
+              </div>
+            </li>
+          </ul>
+          <div layout="row" ng-show="!inventory.length &amp;&amp; loading" align-children="center" class="auction-secondary-annotation">
+            <md-button aria-label="Inventory Loading" flex ng-disabled="true"><span>Loading </span><i class="fa fa-circle-o-notch fa-spin faster"></i></md-button>
+          </div>
+        </div>
       </script>
       <script type="text/ng-template" id="auction-dialog.html">
         <md-dialog aria-label="Start Auction" ng-cloak class="auction-dialog">
