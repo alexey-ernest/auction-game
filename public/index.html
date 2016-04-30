@@ -79,12 +79,12 @@
       <script type="text/ng-template" id="inventory.html">
         <ul class="inventory-items">
           <li ng-repeat="i in inventory" layout="row">
-            <div flex="15" layout="row" layout-align="center center" class="inventory-item-icon"><i class="{{i.icon}}"></i></div>
+            <div layout="row" layout-align="center center" class="inventory-item-icon"><i class="{{i.icon}}"></i></div>
             <div flex class="inventory-item-info">
               <h2 class="md-title">{{i.item}}</h2>
               <p class="md-subhead">{{i.quantity}} items</p>
             </div>
-            <div flex="20" class="inventory-item-action">
+            <div class="inventory-item-action">
               <md-button ng-click="startAuction(i, $event)">Sell</md-button>
             </div>
           </li>
@@ -122,7 +122,7 @@
           </div>
           <div ng-if="!auction &amp;&amp; latest &amp;&amp; latest.winner">
             <p class="md-display-2"><span>{{latest.winner_name}} won!</span></p>
-            <p class="md-subhead"><span>{{latest.quantity}} </span><i class="{{latest.icon}}"></i><span>were sold for {{latest.bid}}</span><i class="flaticon-coins"> </i><span>by {{latest.seller_name}}.</span></p>
+            <p class="md-subhead"><span>{{latest.quantity}} </span><i class="{{latest.icon}}"> </i><span>were sold for {{latest.bid}} </span><i class="flaticon-coins"> </i><span>by {{latest.seller_name}}.</span></p>
           </div>
           <div ng-if="!auction &amp;&amp; (!latest || !latest.winner)">
             <p class="md-subhead">There are no active auctions. Sell something to start new one.</p>

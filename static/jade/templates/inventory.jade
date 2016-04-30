@@ -1,11 +1,11 @@
 script(type="text/ng-template", id="inventory.html")
 	ul.inventory-items
 		li(ng-repeat="i in inventory", layout="row")
-			.inventory-item-icon(flex="15", layout="row", layout-align="center center")
+			.inventory-item-icon(layout="row", layout-align="center center")
 				i(class="{{i.icon}}")
 			.inventory-item-info(flex)
 				h2.md-title {{i.item}}
 				p.md-subhead {{i.quantity}} items
-			.inventory-item-action(flex="20")
+			.inventory-item-action
 				md-button(ng-click="startAuction(i, $event)") Sell
 		
