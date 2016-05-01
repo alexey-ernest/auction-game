@@ -137,10 +137,21 @@ To run tests you have to install [mocha.js](http://npmjs.com/package/mocha):
 $ npm install -g mocha
 ```
 
-Navigate to project folder and type:
+Unit tests:
+```
+$ mocha test/unit/ --recursive
+```
+
+Integration tests:
+```
+$ mocha test/integration/ --recursive
+```
+
+All tests:
 ```
 $ mocha test/* --recursive
 ```
+
 
 ## Example
 Latest build is deployed to AWS EC2 Container Service. You can try it by IP address: http://52.58.101.233/
