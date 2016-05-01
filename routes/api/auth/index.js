@@ -6,6 +6,8 @@ var express = require('express');
 var router = express.Router();
 
 var auth = require('../../../lib/middleware/auth');
+var login = require('./login');
+var logout = require('./logout');
 
 /**
  * Log in endpoint.
@@ -13,12 +15,8 @@ var auth = require('../../../lib/middleware/auth');
 router.post('/login',
   auth.register('name'), // registers player by name
   auth.login(), // logs in user
-  function (req, res, next) {
-    var json = {
-      token: req.token
-    };
-    return res.json(json);
-  });
+  login // send token
+  );
 
 /**
  * Logout endpoint.
@@ -26,8 +24,7 @@ router.post('/login',
 router.delete('/logout',
   auth.private(),
   auth.logout(),
-  function (req, res, next) {
-    res.end();
-  });
+  logout
+  );
 
 module.exports = router;
