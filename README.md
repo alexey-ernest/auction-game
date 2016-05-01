@@ -1,15 +1,33 @@
 # Auction Game
 Auction game built on node.js and angular.js
 
+* [Technologies](#technologies)
 * [UI](#ui)
 * [Docker](#docker)
 * [Tests](#tests)
 * [Example](#example)
 
-## UI
-Web UI is built with Angular Material standards using [Angular Material](https://material.angularjs.org/latest/) framework.
+## Technologies
+* Postgres for persistency
+* Node.js + Express.js for HTTP server and API
+* Socket.io for efficient client-server event-based communication
+* Passport.js for JWT tokens
+* Angular.js for UI
+* Angular Material for Material design
+* Jade for templating
+* Stylus for CSS
+* Font Awesome and Flaticon icons
+* Gulp for compiling UI
+* Mocha.js for testing
+* Docker for running and deploying the application everywhere
 
-Mobile friendly.
+
+## UI
+Web UI is built on Angular.js
+
+* Angular Material design standards by [Angular Material](https://material.angularjs.org/latest/) framework.
+* Mobile friendly.
+* Pure static (can be served using Nginx as a separate application).
 
 <img src="assets/auction-design.png" width="300">
 
