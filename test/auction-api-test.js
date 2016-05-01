@@ -22,26 +22,28 @@ describe('/api/auction', function () {
         .expect(401, done);
     });
 
-    it('should return empty JSON if there are no auctions', function (done) {
+    it('should return nothing if there are no auctions', function (done) {
       common.login(function (err, token) {
         if (err) return done(err);
 
         request(app)
           .get('/api/auction')
           .set('Authorization', 'JWT ' + token)
+          .expect(200)
           .expect({}, common.doneAndDeregister(token, done));
       });
     });
   });
 
   describe('GET /latest', function () {
-    it('should return empty JSON for latest auction if there are no auctions', function (done) {
+    it('should return nothing for latest auction if there are no auctions', function (done) {
       common.login(function (err, token) {
         if (err) return done(err);
 
         request(app)
           .get('/api/auction/latest')
           .set('Authorization', 'JWT ' + token)
+          .expect(200)
           .expect({}, common.doneAndDeregister(token, done));
       });
     });
@@ -334,6 +336,9 @@ describe('/api/auction', function () {
             var endMoment = moment(current_auction.end_time);
             expect(nowMoment.diff(startMoment, 's')).to.equal(0);
             expect(endMoment.diff(startMoment, 's')).to.equal(auctionDuration);
+
+            current_auction.should.have.property('timeLeft');
+            expect(Math.abs(current_auction.timeLeft - auctionDuration) <= 1).to.be.true;
 
             common.doneAndDeregister(token, done)();
           });

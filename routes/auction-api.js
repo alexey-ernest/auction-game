@@ -19,7 +19,7 @@ var auctionService = require('../lib/auction-service');
  * @return     {Object}  Mapped Object.
  */
 function mapAuction(i) {
-  return {
+  var json = {
     id: i.id,
     created: i.created,
     start_time: i.start_time,
@@ -33,6 +33,12 @@ function mapAuction(i) {
     winner: i.winner,
     winner_name: i.winner_name
   };
+
+  if (i.timeLeft) {
+    json.timeLeft = i.timeLeft;
+  }
+
+  return json;
 }
 
 /**
@@ -63,8 +69,15 @@ router.get('/',
     Auction.getCurrent(function (err, auction) {
       if (err) return next(err);
       if (!auction) {
-        return res.json({});
+        return res.end();
       }
+
+      // calculating time left
+      var endMoment = moment(auction.end_time);
+      var nowMoment = moment();
+      var timeLeft = endMoment.diff(nowMoment, 's');
+      auction.timeLeft = timeLeft;
+
       res.json(mapAuction(auction));
     });
   });
@@ -78,14 +91,14 @@ router.get('/latest',
     Auction.getLatest(function (err, auction) {
       if (err) return next(err);
       if (!auction) {
-        return res.json({});
+        return res.end();
       }
 
       // showing latest for 10 seconds only
       var endMoment = moment(auction.end_time);
       var nowMoment = moment();
       if (nowMoment.diff(endMoment, 's') > 10) {
-        return res.json({});
+        return res.end();
       }
 
       res.json(mapAuction(auction));

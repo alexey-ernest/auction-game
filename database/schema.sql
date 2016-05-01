@@ -42,7 +42,7 @@ CREATE SEQUENCE auction_serial;
 
 CREATE TABLE auctions (
     id integer PRIMARY KEY DEFAULT nextval('auction_serial'),
-    created timestamp without time zone DEFAULT (now() at time zone 'utc'),
+    created timestamp without time zone NOT NULL,
     start_time timestamp without time zone,
     end_time timestamp without time zone,
     seller integer NOT NULL REFERENCES players ON DELETE CASCADE,
