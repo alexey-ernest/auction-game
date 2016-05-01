@@ -2,7 +2,7 @@
  * @fileOverview Login and logout endpoint tests.
  */
 
-var app = require('..');
+var app = require('../..');
 var request = require('supertest');
 var uuid = require('node-uuid');
 var common = require('./common');

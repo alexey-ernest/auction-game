@@ -2,7 +2,7 @@
  * @fileOverview Auction endpoint tests.
  */
 
-var app = require('..');
+var app = require('../..');
 var request = require('supertest');
 var uuid = require('node-uuid');
 var common = require('./common');
@@ -12,8 +12,8 @@ var chai = require('chai');
 chai.should();
 var expect = chai.expect;
 
-var db = require('../lib/db');
-var auctionService = require('../lib/auction-service')(db);
+var db = require('../../lib/db');
+var auctionService = require('../../lib/auction-service')(db);
 
 describe('/api/auction', function () {
 

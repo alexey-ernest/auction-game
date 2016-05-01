@@ -2,7 +2,7 @@
  * @fileOverview Common helper functions for tests.
  */
 
-var app = require('..');
+var app = require('../..');
 var request = require('supertest');
 var uuid = require('node-uuid');
 
