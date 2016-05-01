@@ -18,7 +18,7 @@ Auction game built on node.js and angular.js
 * Stylus for CSS
 * Font Awesome and Flaticon icons
 * Gulp for compiling UI
-* Mocha.js for testing
+* Mocha.js and Sinon.js for testing
 * Docker for running and deploying the application everywhere
 
 
