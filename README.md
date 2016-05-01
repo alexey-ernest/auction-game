@@ -8,7 +8,8 @@ Auction game built on node.js and angular.js
 ## UI
 Web UI is built with Angular Material standards using [Angular Material](https://material.angularjs.org/latest/) framework.
 
-<img src="assets/auction-design.png?raw=true" alt="Material Design UI" style="width: 300px;"/>
+![](assets/auction-design.png =250x)
+
 
 ## Docker
 
