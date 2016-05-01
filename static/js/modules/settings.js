@@ -5,4 +5,5 @@
       .constant('urls', {
         api: '/api'
       });
+      
 }) ((window.angular));

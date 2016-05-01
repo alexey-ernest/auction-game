@@ -6,7 +6,7 @@ script(type="text/ng-template", id="game.html")
 			p.md-display-2
 				span {{auction.quantity}} 
 				i(class="{{auction.icon}}") 
-				span for {{auction.min_bid}} 
+				span for {{auction.bid || auction.min_bid}} 
 				i.flaticon-coins 
 			p.md-subhead
 				span From {{auction.seller_name}}. Only {{auction.timeLeft}}s left
@@ -25,5 +25,5 @@ script(type="text/ng-template", id="game.html")
 		div(ng-if="!auction && (!latest || !latest.winner)")
 			p.md-subhead There are no active auctions. Sell something to start new one.
 
-		md-button.md-fab.md-raised.md-accent.auction-button(ng-disabled="!auction || !canBet", ng-click="doBet($event)")
+		md-button.md-fab.md-raised.md-accent.auction-button(ng-disabled="!auction || !canBet", aria-label="Bet", ng-click="doBet($event)")
 			md-icon.fa.fa-thumbs-up

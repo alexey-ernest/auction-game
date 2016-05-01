@@ -4,23 +4,70 @@
   var module = angular.module('game', [
     'auction-api', 
     'access',
-    'icons'
+    'icons',
+    'events'
   ]);
 
   module.directive('auctionGame', [
-    '$interval', 'auctionApi', 'player', 'access', 'icons', '$mdDialog',
-    function($interval, auctionApi, player, access, icons, $mdDialog) {
+    'auctionApi', 'player', 'access', 'icons', 'events', '$mdDialog',
+    function(auctionApi, player, access, icons, events, $mdDialog) {
+
+      function loadCurrentAuction($scope) {
+        if (!access.token()) return;
+
+        $scope.loading = true;
+        auctionApi.getCurrent(access.token(), function (err, data) {
+          $scope.loading = false;
+          if (err) return console.error(err);
+          
+          if (data && data.id) {
+            data.icon = icons.getIcon(data.item);
+            data.min_bid = data.bid ? data.bid + 1 : data.min_bid;
+            $scope.canBet = $scope.player && $scope.player.id !== data.seller;
+          } else {
+            data = null;
+          }
+
+          $scope.auction = data;
+        });
+      }
+
+      function updateAuction($scope, data) {
+        if (data) {
+          data.icon = icons.getIcon(data.item);
+        }
+
+        $scope.auction = data;
+        $scope.canBet = $scope.player && $scope.player.id !== data.seller;
+        $scope.$digest();
+      }
+
+      function loadLatestAuction($scope) {
+        if (!access.token()) return;
+
+        $scope.loading = true;
+
+        auctionApi.getLatest(access.token(), function (err, latest) {
+          $scope.loading = false;
+          if (err) return console.error(err);
+          
+          if (latest && latest.id) {
+            latest.icon = icons.getIcon(latest.item);
+          } else {
+            latest = null;
+          }
+
+          $scope.latest = latest;
+          $scope.$digest();
+        });
+      }
 
       return {
         restrict: 'EA',
         scope: {},
         replace: true,
         templateUrl: 'game.html',
-        link: function($scope, element) {
-          $scope.loading = false;
-          $scope.auction = null;
-          $scope.latest = null;
-          $scope.canBet = false;
+        link: function($scope) {
 
           $scope.player = player.get();
           $scope.$watch(function() { 
@@ -31,44 +78,26 @@
 
           var $baseScope = $scope;
 
-          // polling player data
-          var timeoutId = $interval(function() {
-            if (!access.token()) return;
+          loadCurrentAuction($scope);
+          loadLatestAuction($scope);
 
-            $scope.loading = true;
-            auctionApi.getCurrent(access.token(), function (err, data) {
-              $scope.loading = false;
-              if (err) return console.error(err);
-              
-              if (!data || !data.id) {
-                data = null;
-                // getting latest auction
-                auctionApi.getLatest(access.token(), function (err, latest) {
-                  if (err) return console.error(err);
-                  
-                  if (latest && !latest.id) {
-                    latest = null;
-                  }
-                  if (latest) {
-                    latest.icon = icons.getIcon(latest.item);
-                  }
-                  $scope.latest = latest;
-                });
-              } else {
-                data.icon = icons.getIcon(data.item);
-                data.min_bid = data.bid ? data.bid + 1 : data.min_bid;
-
-                $scope.canBet = $scope.player && $scope.player.id !== data.seller;
-              }
-              
+          $scope.$on(events.auctionStarted, function() {
+            $scope.latest = null;
+            loadCurrentAuction($scope);
+          });
+          $scope.$on(events.auctionUpdated, function(event, data) {
+            updateAuction($scope, data);
+          });
+          $scope.$on(events.auctionCompleted, function() {
+            $scope.auction = null;
+            loadLatestAuction($scope);
+          });
+          $scope.$on(events.noAuctions, function() {
+            if ($scope.auction || $scope.latest) {
+              $scope.auction = null;
               $scope.latest = null;
-              $scope.auction = data;
-            });
-          }, 1000);
-
-          // destructor
-          $scope.$on('$destroy', function() {
-            $interval.cancel(timeoutId);
+              $scope.$digest();
+            }
           });
 
           // confirm auction

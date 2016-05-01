@@ -18,7 +18,8 @@
     "nodejs-model": "^0.1.6",
     "passport": "^0.3.2",
     "passport-jwt": "^2.0.0",
-    "pg": "^4.5.3"
+    "pg": "^4.5.3",
+    "socket.io": "^1.4.5"
   },
   "devDependencies": {
     "angular": "^1.5.5",

@@ -5,12 +5,13 @@
     'inventory-api', 
     'auction-api', 
     'access',
-    'icons'
+    'icons',
+    'events'
   ]);
 
   module.directive('auctionInventory', [
-    '$interval', 'inventoryApi', 'auctionApi', 'player', 'access', 'icons', '$mdDialog',
-    function($interval, inventoryApi, auctionApi, player, access, icons, $mdDialog) {
+    'inventoryApi', 'auctionApi', 'player', 'access', 'icons', 'events', '$mdDialog',
+    function(inventoryApi, auctionApi, player, access, icons, events, $mdDialog) {
 
       function applyIcons(items) {
         items.forEach(function (i) {
@@ -18,35 +19,37 @@
         });
       }
 
+      function loadInventory($scope) {
+        if (!access.token()) return;
+
+          $scope.loading = true;
+          inventoryApi.get(access.token(), function (err, items) {
+            $scope.loading = false;
+            if (err) return console.error(err);
+            
+            applyIcons(items);
+            $scope.inventory = items;
+            $scope.$digest();
+          });
+      }
+
       return {
         restrict: 'EA',
         scope: {},
         replace: true,
         templateUrl: 'inventory.html',
-        link: function($scope, element) {
+        link: function($scope) {
+
           $scope.loading = false;
           $scope.inventory = [];
-          $scope.newAuction = {};
+          loadInventory($scope);
 
+          $scope.newAuction = {};
           var $baseScope = $scope;
 
-          // polling player data
-          var timeoutId = $interval(function() {
-            if (!access.token()) return;
-
-            $scope.loading = true;
-            inventoryApi.get(access.token(), function (err, items) {
-              $scope.loading = false;
-              if (err) return console.error(err);
-              
-              applyIcons(items);
-              $scope.inventory = items;
-            });
-          }, 1000);
-
-          // destructor
-          $scope.$on('$destroy', function() {
-            $interval.cancel(timeoutId);
+          $scope.$on(events.auctionCompleted, function() {
+            // reloading inventory
+            loadInventory($scope);
           });
 
           // confirm auction

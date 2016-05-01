@@ -13,7 +13,7 @@ script(type="text/ng-template", id="login.html")
                                 label Your Name
                                 input(required, type="text", name="loginName", ng-model="login.name", minlength="3", maxlength="50")
                         div(flex)
-                    md-button.md-fab.md-raised.md-accent.auction-button(type="submit", ng-disabled="signupform.$invalid || loading")
+                    md-button.md-fab.md-raised.md-accent.auction-button(type="submit", aria-label="Login", ng-disabled="signupform.$invalid || loading")
                         md-icon.fa.fa-circle-o-notch.fa-spin.faster(ng-show="loading") 
                         md-icon.fa.fa-sign-in(ng-show="!loading")
         md-content.auction-secondary

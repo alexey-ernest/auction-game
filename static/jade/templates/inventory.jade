@@ -10,7 +10,7 @@ script(type="text/ng-template", id="inventory.html")
 				.inventory-item-action
 					md-button(ng-click="startAuction(i, $event)") Sell
 		
-		.auction-secondary-annotation(layout="row", ng-show="!inventory.length && loading", align-children="center")
+		.auction-secondary-annotation(layout="row", ng-show="loading", align-children="center")
 			md-button(aria-label="Inventory Loading", flex, ng-disabled="true")
 				span Loading 
 				i.fa.fa-circle-o-notch.fa-spin.faster

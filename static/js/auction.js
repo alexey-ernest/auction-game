@@ -8,7 +8,9 @@
     'login',
     'stats',
     'inventory',
-    'game'
+    'game',
+    'socket',
+    'events'
   ]);
 
   // Config
@@ -54,8 +56,22 @@
 
   // Main application controller
   app.controller('AuctionCtrl', [
-    '$rootScope',
-    function ($rootScope) {
+    '$rootScope', 'socket', 'events',
+    function ($rootScope, socket, events) {
+
+      // Global events
+      socket.on('auction-started', function () {
+        $rootScope.$broadcast(events.auctionStarted);
+      });
+      socket.on('auction-updated', function (data) {
+        $rootScope.$broadcast(events.auctionUpdated, data);
+      });
+      socket.on('auction-completed', function () {
+        $rootScope.$broadcast(events.auctionCompleted);
+      });
+      socket.on('no-auctions', function () {
+        $rootScope.$broadcast(events.noAuctions);
+      });
 
       $rootScope.pageTitle = 'Crossover Auction Game';
       $rootScope.$on('$stateChangeSuccess', function (event, toState/*, toParams, from, fromParams*/) {

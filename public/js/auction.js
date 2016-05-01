@@ -147,29 +147,88 @@
   ]);  
     
 })(window, window.angular);
+(function(window, angular) {
+    "use strict";
+
+    angular.module('events', []) 
+      .constant('events', {
+      	'auctionStarted': 'auction-started',
+      	'auctionUpdated': 'auction-updated',
+      	'auctionCompleted': 'auction-completed',
+      	'noAuctions': 'no-auctions'
+      });
+    
+})(window, window.angular);
 (function (angular) {
   "use strict";
 
   var module = angular.module('game', [
     'auction-api', 
     'access',
-    'icons'
+    'icons',
+    'events'
   ]);
 
   module.directive('auctionGame', [
-    '$interval', 'auctionApi', 'player', 'access', 'icons', '$mdDialog',
-    function($interval, auctionApi, player, access, icons, $mdDialog) {
+    'auctionApi', 'player', 'access', 'icons', 'events', '$mdDialog',
+    function(auctionApi, player, access, icons, events, $mdDialog) {
+
+      function loadCurrentAuction($scope) {
+        if (!access.token()) return;
+
+        $scope.loading = true;
+        auctionApi.getCurrent(access.token(), function (err, data) {
+          $scope.loading = false;
+          if (err) return console.error(err);
+          
+          if (data && data.id) {
+            data.icon = icons.getIcon(data.item);
+            data.min_bid = data.bid ? data.bid + 1 : data.min_bid;
+            $scope.canBet = $scope.player && $scope.player.id !== data.seller;
+          } else {
+            data = null;
+          }
+
+          $scope.auction = data;
+        });
+      }
+
+      function updateAuction($scope, data) {
+        if (data) {
+          data.icon = icons.getIcon(data.item);
+        }
+
+        $scope.auction = data;
+        $scope.canBet = $scope.player && $scope.player.id !== data.seller;
+        $scope.$digest();
+      }
+
+      function loadLatestAuction($scope) {
+        if (!access.token()) return;
+
+        $scope.loading = true;
+
+        auctionApi.getLatest(access.token(), function (err, latest) {
+          $scope.loading = false;
+          if (err) return console.error(err);
+          
+          if (latest && latest.id) {
+            latest.icon = icons.getIcon(latest.item);
+          } else {
+            latest = null;
+          }
+
+          $scope.latest = latest;
+          $scope.$digest();
+        });
+      }
 
       return {
         restrict: 'EA',
         scope: {},
         replace: true,
         templateUrl: 'game.html',
-        link: function($scope, element) {
-          $scope.loading = false;
-          $scope.auction = null;
-          $scope.latest = null;
-          $scope.canBet = false;
+        link: function($scope) {
 
           $scope.player = player.get();
           $scope.$watch(function() { 
@@ -180,44 +239,26 @@
 
           var $baseScope = $scope;
 
-          // polling player data
-          var timeoutId = $interval(function() {
-            if (!access.token()) return;
+          loadCurrentAuction($scope);
+          loadLatestAuction($scope);
 
-            $scope.loading = true;
-            auctionApi.getCurrent(access.token(), function (err, data) {
-              $scope.loading = false;
-              if (err) return console.error(err);
-              
-              if (!data || !data.id) {
-                data = null;
-                // getting latest auction
-                auctionApi.getLatest(access.token(), function (err, latest) {
-                  if (err) return console.error(err);
-                  
-                  if (latest && !latest.id) {
-                    latest = null;
-                  }
-                  if (latest) {
-                    latest.icon = icons.getIcon(latest.item);
-                  }
-                  $scope.latest = latest;
-                });
-              } else {
-                data.icon = icons.getIcon(data.item);
-                data.min_bid = data.bid ? data.bid + 1 : data.min_bid;
-
-                $scope.canBet = $scope.player && $scope.player.id !== data.seller;
-              }
-              
+          $scope.$on(events.auctionStarted, function() {
+            $scope.latest = null;
+            loadCurrentAuction($scope);
+          });
+          $scope.$on(events.auctionUpdated, function(event, data) {
+            updateAuction($scope, data);
+          });
+          $scope.$on(events.auctionCompleted, function() {
+            $scope.auction = null;
+            loadLatestAuction($scope);
+          });
+          $scope.$on(events.noAuctions, function() {
+            if ($scope.auction || $scope.latest) {
+              $scope.auction = null;
               $scope.latest = null;
-              $scope.auction = data;
-            });
-          }, 1000);
-
-          // destructor
-          $scope.$on('$destroy', function() {
-            $interval.cancel(timeoutId);
+              $scope.$digest();
+            }
           });
 
           // confirm auction
@@ -366,12 +407,13 @@
     'inventory-api', 
     'auction-api', 
     'access',
-    'icons'
+    'icons',
+    'events'
   ]);
 
   module.directive('auctionInventory', [
-    '$interval', 'inventoryApi', 'auctionApi', 'player', 'access', 'icons', '$mdDialog',
-    function($interval, inventoryApi, auctionApi, player, access, icons, $mdDialog) {
+    'inventoryApi', 'auctionApi', 'player', 'access', 'icons', 'events', '$mdDialog',
+    function(inventoryApi, auctionApi, player, access, icons, events, $mdDialog) {
 
       function applyIcons(items) {
         items.forEach(function (i) {
@@ -379,35 +421,37 @@
         });
       }
 
+      function loadInventory($scope) {
+        if (!access.token()) return;
+
+          $scope.loading = true;
+          inventoryApi.get(access.token(), function (err, items) {
+            $scope.loading = false;
+            if (err) return console.error(err);
+            
+            applyIcons(items);
+            $scope.inventory = items;
+            $scope.$digest();
+          });
+      }
+
       return {
         restrict: 'EA',
         scope: {},
         replace: true,
         templateUrl: 'inventory.html',
-        link: function($scope, element) {
+        link: function($scope) {
+
           $scope.loading = false;
           $scope.inventory = [];
-          $scope.newAuction = {};
+          loadInventory($scope);
 
+          $scope.newAuction = {};
           var $baseScope = $scope;
 
-          // polling player data
-          var timeoutId = $interval(function() {
-            if (!access.token()) return;
-
-            $scope.loading = true;
-            inventoryApi.get(access.token(), function (err, items) {
-              $scope.loading = false;
-              if (err) return console.error(err);
-              
-              applyIcons(items);
-              $scope.inventory = items;
-            });
-          }, 1000);
-
-          // destructor
-          $scope.$on('$destroy', function() {
-            $interval.cancel(timeoutId);
+          $scope.$on(events.auctionCompleted, function() {
+            // reloading inventory
+            loadInventory($scope);
           });
 
           // confirm auction
@@ -576,7 +620,18 @@
       .constant('urls', {
         api: '/api'
       });
+      
 }) ((window.angular));
+(function (angular, io) {
+  "use strict";
+
+  var module = angular.module('socket', []);
+
+  module.factory('socket', [function () {
+    return io();
+  }]);
+
+})(window.angular, window.io);
 (function (angular) {
   "use strict";
 
@@ -584,46 +639,56 @@
     'player-api', 
     'auth-api', 
     'access', 
-    'player'
+    'player',
+    'events'
   ]);
   
   module.directive('auctionStats', [
-    '$interval', 'playerApi', 'player', '$state', 'authApi', 'access',
-    function($interval, playerApi, player, $state, authApi, access) {
+    'playerApi', 'player', '$state', 'authApi', 'access', 'events',
+    function(playerApi, player, $state, authApi, access, events) {
+
+      function loadPlayerData($scope) {
+        if (!access.token()) return;
+
+        $scope.loading = true;
+        playerApi.get(access.token(), function (err, data) {
+          $scope.loading = false;
+          if (err && err.status === 401) {
+            access.token(null);
+            return $state.go('login');
+          }
+
+          if (err) return console.error(err);
+
+          player.set(data);
+          $scope.player = data;
+          $scope.$digest();
+        });
+      }
 
       return {
         restrict: 'EA',
         scope: {},
         replace: true,
         templateUrl: 'stats.html',
-        link: function($scope, element) {
+        link: function($scope) {
+
+          $scope.loading = false;
           $scope.player = player.get();
+          
+          if (!$scope.player) {
+            loadPlayerData($scope);
+          }
 
-          // polling player data
-          var timeoutId = $interval(function() {
-            if (!access.token()) return;
-
-            playerApi.get(access.token(), function (err, data) {
-              if (err && err.status === 401) {
-                access.token(null);
-                return $state.go('login');
-              }
-
-              if (err) return console.error(err);
-
-              player.set(data);
-              $scope.player = data;
-            });
-          }, 1000);
-
-          // destructor
-          $scope.$on('$destroy', function() {
-            $interval.cancel(timeoutId);
+          $scope.$on(events.auctionCompleted, function() {
+            // reloading player data
+            loadPlayerData($scope);
           });
 
           $scope.logout = function () {
             authApi.logout(access.token(), function (err) {
               if (err) return console.error(err);
+
               access.token(null);
               $state.go('login');
             });
@@ -644,7 +709,9 @@
     'login',
     'stats',
     'inventory',
-    'game'
+    'game',
+    'socket',
+    'events'
   ]);
 
   // Config
@@ -690,8 +757,22 @@
 
   // Main application controller
   app.controller('AuctionCtrl', [
-    '$rootScope',
-    function ($rootScope) {
+    '$rootScope', 'socket', 'events',
+    function ($rootScope, socket, events) {
+
+      // Global events
+      socket.on('auction-started', function () {
+        $rootScope.$broadcast(events.auctionStarted);
+      });
+      socket.on('auction-updated', function (data) {
+        $rootScope.$broadcast(events.auctionUpdated, data);
+      });
+      socket.on('auction-completed', function () {
+        $rootScope.$broadcast(events.auctionCompleted);
+      });
+      socket.on('no-auctions', function () {
+        $rootScope.$broadcast(events.noAuctions);
+      });
 
       $rootScope.pageTitle = 'Crossover Auction Game';
       $rootScope.$on('$stateChangeSuccess', function (event, toState/*, toParams, from, fromParams*/) {

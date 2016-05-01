@@ -43,7 +43,7 @@
                   </div>
                   <div flex></div>
                 </div>
-                <md-button type="submit" ng-disabled="signupform.$invalid || loading" class="md-fab md-raised md-accent auction-button">
+                <md-button type="submit" aria-label="Login" ng-disabled="signupform.$invalid || loading" class="md-fab md-raised md-accent auction-button">
                   <md-icon ng-show="loading" class="fa fa-circle-o-notch fa-spin faster"> </md-icon>
                   <md-icon ng-show="!loading" class="fa fa-sign-in"></md-icon>
                 </md-button>
@@ -90,7 +90,7 @@
               </div>
             </li>
           </ul>
-          <div layout="row" ng-show="!inventory.length &amp;&amp; loading" align-children="center" class="auction-secondary-annotation">
+          <div layout="row" ng-show="loading" align-children="center" class="auction-secondary-annotation">
             <md-button aria-label="Inventory Loading" flex ng-disabled="true"><span>Loading </span><i class="fa fa-circle-o-notch fa-spin faster"></i></md-button>
           </div>
         </div>
@@ -122,17 +122,17 @@
       <script type="text/ng-template" id="game.html">
         <div flex="100" layout="column" layout-align="center center" class="md-toolbar-tools">
           <div ng-if="auction">
-            <p class="md-display-2"><span>{{auction.quantity}} </span><i class="{{auction.icon}}"> </i><span>for {{auction.min_bid}} </span><i class="flaticon-coins"> </i></p>
+            <p class="md-display-2"><span>{{auction.quantity}} </span><i class="{{auction.icon}}"> </i><span>for {{auction.bid || auction.min_bid}} </span><i class="flaticon-coins"> </i></p>
             <p class="md-subhead"><span>From {{auction.seller_name}}. Only {{auction.timeLeft}}s left</span></p>
           </div>
           <div ng-if="!auction &amp;&amp; latest &amp;&amp; latest.winner">
             <p class="md-display-2"><span>{{latest.winner_name}} won!</span></p>
-            <p class="md-subhead"><span>{{latest.quantity}} </span><i class="{{latest.icon}}"> </i><span>were sold for {{latest.bid}} </span><i class="flaticon-coins"> </i><span>by {{latest.seller_name}}.</span></p>
+            <p class="md-subhead"><span>{{latest.seller_name}} sold {{latest.quantity}} </span><i class="{{latest.icon}}"> </i><span>for {{latest.bid}} </span><i class="flaticon-coins"> </i></p>
           </div>
           <div ng-if="!auction &amp;&amp; (!latest || !latest.winner)">
             <p class="md-subhead">There are no active auctions. Sell something to start new one.</p>
           </div>
-          <md-button ng-disabled="!auction || !canBet" ng-click="doBet($event)" class="md-fab md-raised md-accent auction-button">
+          <md-button ng-disabled="!auction || !canBet" aria-label="Bet" ng-click="doBet($event)" class="md-fab md-raised md-accent auction-button">
             <md-icon class="fa fa-thumbs-up"></md-icon>
           </md-button>
         </div>
@@ -163,6 +163,7 @@
     <script src="/js/angular-cookies.min.js"></script>
     <script src="/js/angular-material.min.js"></script>
     <script src="/js/moment.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="/js/auction.js"></script>
   </body>
 </html>
