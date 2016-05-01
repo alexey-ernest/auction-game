@@ -105,6 +105,43 @@ function tick() {
 module.exports = function (server) {
   io = require('socket.io')(server);
 
+  var socketPlayers = {};
+  var playerSockets = {};
+  io.on('connection', function(socket){
+    // player logged in
+    socket.on('login', function(player_id) {
+      debug('Player ' + player_id + ' just logged in.');
+
+      var anotherSocket = playerSockets[player_id];
+      if (anotherSocket && anotherSocket.id !== socket.id) {
+        // somebody else logged in with the same name, logging out him
+        debug('Logging out other user logged in as player ' + player_id + '.');
+
+        socketPlayers[anotherSocket.id] = null;
+        playerSockets[player_id].emit('logout');
+      }
+      
+      var previousPlayerId = socketPlayers[socket.id];
+      if (previousPlayerId) {
+        // this socket was logged in as another player
+        playerSockets[previousPlayerId] = null;
+      }
+
+      // saving player connection
+      socketPlayers[socket.id] = player_id;
+      playerSockets[player_id] = socket;
+    });
+
+    // player disconnected
+    socket.on('disconnect', function() {
+      var playerId = socketPlayers[socket.id];
+      debug('Player ' + playerId + ' disconnected.');
+
+      delete playerSockets[playerId];
+      delete socketPlayers[socket.id];
+    });
+  });
+
   return {
     start: function () {
       timeoutId = setTimeout(tick, 1000);

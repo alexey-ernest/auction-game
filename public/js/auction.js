@@ -155,7 +155,9 @@
       	'auctionStarted': 'auction-started',
       	'auctionUpdated': 'auction-updated',
       	'auctionCompleted': 'auction-completed',
-      	'noAuctions': 'no-auctions'
+      	'noAuctions': 'no-auctions',
+      	'login': 'login',
+      	'logout': 'logout'
       });
     
 })(window, window.angular);
@@ -516,8 +518,10 @@
     var module = angular.module('login', [
       'ui.router',
       'auth-api',
+      'player-api',
       'access',
-      'player'
+      'player',
+      'events'
     ]);
 
     // Routes
@@ -529,7 +533,7 @@
             templateUrl: 'login.html',
             controller: 'LoginCtrl',
             data: {
-              pageTitle: 'Auction Game - Log in'
+              pageTitle: 'Log in to Crossover Auction Game'
             }
           });
         }
@@ -537,8 +541,8 @@
 
     // Controllers
     module.controller('LoginCtrl', [
-      '$scope', '$state', 'authApi', 'access', 'player', '$mdDialog',
-      function ($scope, $state, authApi, access, player, $mdDialog) {
+      '$scope', '$state', 'authApi', 'playerApi', 'access', 'player', 'events', '$mdDialog',
+      function ($scope, $state, authApi, playerApi, access, player, events, $mdDialog) {
 
         $scope.login = {};
         $scope.loading = false;
@@ -546,8 +550,8 @@
         $scope.submit = function (params) {
           $scope.loading = true;
           authApi.login(params.name, function (err, data) {
-            $scope.loading = false;
             if (err) {
+              $scope.loading = false;
               console.error(err.message);
               return $mdDialog.show($mdDialog.alert()
                 .clickOutsideToClose(true)
@@ -558,7 +562,16 @@
 
             access.token(data.token);
             player.set(null);
-            $state.go('home');
+
+            // loading player data
+            playerApi.get(access.token(), function (err, data) {
+              $scope.loading = false;
+              if (err) console.error(err.message);
+
+              player.set(data);
+              $scope.$emit(events.login, data);
+              $state.go('home');
+            });
           });
         };
       }
@@ -711,7 +724,9 @@
     'inventory',
     'game',
     'socket',
-    'events'
+    'events',
+    'access',
+    'player'
   ]);
 
   // Config
@@ -757,19 +772,34 @@
 
   // Main application controller
   app.controller('AuctionCtrl', [
-    '$rootScope', 'socket', 'events',
-    function ($rootScope, socket, events) {
+    '$rootScope', '$state', 'socket', 'events', 'access', 'player',
+    function ($rootScope, $state, socket, events, access, player) {
 
-      // Global events
+      // Client events
+      $rootScope.$on(events.login, function (event, player) {
+        socket.emit('login', player.id);
+      });
+
+      // Server events
+      socket.on('logout', function () {
+        $rootScope.$broadcast(events.logout);
+        access.token(null);
+        player.set(null);
+        $state.go('login');
+      });
+
       socket.on('auction-started', function () {
         $rootScope.$broadcast(events.auctionStarted);
       });
+
       socket.on('auction-updated', function (data) {
         $rootScope.$broadcast(events.auctionUpdated, data);
       });
+
       socket.on('auction-completed', function () {
         $rootScope.$broadcast(events.auctionCompleted);
       });
+
       socket.on('no-auctions', function () {
         $rootScope.$broadcast(events.noAuctions);
       });

@@ -6,7 +6,9 @@
       	'auctionStarted': 'auction-started',
       	'auctionUpdated': 'auction-updated',
       	'auctionCompleted': 'auction-completed',
-      	'noAuctions': 'no-auctions'
+      	'noAuctions': 'no-auctions',
+      	'login': 'login',
+      	'logout': 'logout'
       });
     
 })(window, window.angular);
