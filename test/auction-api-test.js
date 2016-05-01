@@ -6,12 +6,14 @@ var app = require('..');
 var request = require('supertest');
 var uuid = require('node-uuid');
 var common = require('./common');
-var auctionService = require('../lib/auction-service');
 var moment = require('moment');
 
 var chai = require('chai');
 chai.should();
 var expect = chai.expect;
+
+var db = require('../lib/db');
+var auctionService = require('../lib/auction-service')(db);
 
 describe('/api/auction', function () {
 

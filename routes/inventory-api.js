@@ -5,8 +5,9 @@
 var express = require('express');
 var router = express.Router();
 
-var auth = require('../lib/mw/auth');
-var Inventory = require('../lib/inventory');
+var auth = require('../lib/middleware/auth');
+var db = require('../lib/db');
+var Inventory = db.Inventory;
 
 /**
  * Helper method for mapping db inventory items.

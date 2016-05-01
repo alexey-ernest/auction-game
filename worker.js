@@ -3,9 +3,11 @@
  */
 
 var debug = require('debug')('auction-game:worker');
-var Auction = require('./lib/auction');
-var auctionService = require('./lib/auction-service');
 var moment = require('moment');
+
+var db = require('./lib/db');
+var Auction = db.Auction;
+var auctionService = require('./lib/auction-service')(db);
 
 var timeoutId;
 

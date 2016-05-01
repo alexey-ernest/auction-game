@@ -5,7 +5,7 @@
 var express = require('express');
 var router = express.Router();
 
-var auth = require('../lib/mw/auth');
+var auth = require('../lib/middleware/auth');
 var PlayerModel = require('../lib/player-model');
 
 // mounting player API
