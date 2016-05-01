@@ -1,8 +1,18 @@
 # Auction Game
-Auction game built on node.js and angular.js ([Angular Material](https://material.angularjs.org/latest/)).
+Auction game built on node.js and angular.js
 
+* [UI](#ui)
 * [Docker](#docker)
 * [Tests](#tests)
+* [Example](#example)
+
+## UI
+Web UI is built with Angular Material standards using [Angular Material](https://material.angularjs.org/latest/) framework.
+
+Mobile friendly.
+
+<img src="assets/auction-design.png" width="300">
+
 
 ## Docker
 
@@ -67,7 +77,7 @@ CREATE SEQUENCE auction_serial;
 
 CREATE TABLE auctions (
     id integer PRIMARY KEY DEFAULT nextval('auction_serial'),
-    created timestamp without time zone DEFAULT (now() at time zone 'utc'),
+    created timestamp without time zone NOT NULL,
     start_time timestamp without time zone,
     end_time timestamp without time zone,
     seller integer NOT NULL REFERENCES players ON DELETE CASCADE,
@@ -112,3 +122,6 @@ Navigate to project folder and type:
 ```
 $ mocha test/* --recursive
 ```
+
+## Example
+Latest build is deployed to AWS EC2 Container Service. You can try it by IP address: http://52.58.101.233/
