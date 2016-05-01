@@ -4,6 +4,7 @@ Auction game built on node.js and angular.js
 * [UI](#ui)
 * [Docker](#docker)
 * [Tests](#tests)
+* [Example](#example)
 
 ## UI
 Web UI is built with Angular Material standards using [Angular Material](https://material.angularjs.org/latest/) framework.
@@ -121,3 +122,6 @@ Navigate to project folder and type:
 ```
 $ mocha test/* --recursive
 ```
+
+## Example
+Latest build is deployed to AWS EC2 Container Service. You can try it by IP address: http://52.58.101.233/
