@@ -5,6 +5,7 @@
 var debug = require('debug')('auction-game:worker');
 var Auction = require('./lib/auction');
 var auctionService = require('./lib/auction-service');
+var moment = require('moment');
 
 var timeoutId;
 
@@ -20,9 +21,15 @@ function tick() {
     if (err) return console.error(err);
 
     if (current) {
-      debug('Current auction (' + current.id  + ') is still active. Going sleep for 1s...');
+
+      // calculating time left
+      var endMoment = moment(current.end_time);
+      var nowMoment = moment();
+      var timeLeft = endMoment.diff(nowMoment, 's');
+
+      debug('Current auction (' + current.id  + ') is still active. Going sleep for ' + timeLeft + 's...');
       // auction is going, nothing to do
-      timeoutId = setTimeout(tick, 1000);
+      timeoutId = setTimeout(tick, (timeLeft + 1) * 1000);
       return;
     }
 
@@ -43,11 +50,17 @@ function tick() {
 
       // starting new auction
       debug('Checking queue for new auctions...');
-      auctionService.startAuction(function (err, auction) {
+      auctionService.startAuction(function (err, result) {
         if (err) return console.error(err);
 
+        var auction = result.auction;
         if (auction) {
-          debug('New auction ' + auction.id + ' started.');          
+          if (result.ok) {
+            debug('New auction ' + auction.id + ' has been started.');
+          } else {
+            // could not start auction (not enough items)
+            debug('Auction ' + auction.id + ' could not be started: ' + result.error);
+          }
         }
         
         timeoutId = setTimeout(tick, 1000);

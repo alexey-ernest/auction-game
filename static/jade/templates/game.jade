@@ -16,11 +16,10 @@ script(type="text/ng-template", id="game.html")
 			p.md-display-2
 				span {{latest.winner_name}} won!
 			p.md-subhead
-				span {{latest.quantity}} 
+				span {{latest.seller_name}} sold {{latest.quantity}} 
 				i(class="{{latest.icon}}") 
-				span were sold for {{latest.bid}} 
+				span for {{latest.bid}} 
 				i.flaticon-coins 
-				span by {{latest.seller_name}}.
 
 		//- no auctions
 		div(ng-if="!auction && (!latest || !latest.winner)")
