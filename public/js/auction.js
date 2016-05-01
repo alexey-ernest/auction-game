@@ -657,8 +657,8 @@
   ]);
   
   module.directive('auctionStats', [
-    '$interval', 'playerApi', 'player', '$state', 'authApi', 'access', 'events',
-    function($interval, playerApi, player, $state, authApi, access, events) {
+    'playerApi', 'player', '$state', 'authApi', 'access', 'events',
+    function(playerApi, player, $state, authApi, access, events) {
 
       function loadPlayerData($scope) {
         if (!access.token()) return $state.go('login');
@@ -706,14 +706,6 @@
               $state.go('login');
             });
           };
-
-          // periodically poll player endpoint to check whether server is up
-          var timeoutId = $interval(function() {
-            loadPlayerData($scope);
-          }, 60 * 1000);
-          $scope.$on('$destroy', function() {
-            $interval.cancel(timeoutId);
-          });
         }
       };
   }]);
