@@ -34,14 +34,14 @@
             <div flex="100" class="md-toolbar-tools">
               <form flex="100" name="loginform" ng-submit="submit(login)">
                 <div layout="row" layout-align="center">
-                  <div flex="25"></div>
-                  <div flex="50">
+                  <div flex></div>
+                  <div flex="40">
                     <md-input-container class="md-block md-title">
                       <label>Your Name</label>
                       <input required type="text" name="loginName" ng-model="login.name" minlength="3" maxlength="50">
                     </md-input-container>
                   </div>
-                  <div flex="25"></div>
+                  <div flex></div>
                 </div>
                 <md-button type="submit" ng-disabled="signupform.$invalid || loading" class="md-fab md-raised md-accent auction-button">
                   <md-icon ng-show="loading" class="fa fa-circle-o-notch fa-spin faster"> </md-icon>
@@ -123,7 +123,7 @@
         <div flex="100" layout="column" layout-align="center center" class="md-toolbar-tools">
           <div ng-if="auction">
             <p class="md-display-2"><span>{{auction.quantity}} </span><i class="{{auction.icon}}"> </i><span>for {{auction.min_bid}} </span><i class="flaticon-coins"> </i></p>
-            <p class="md-subhead"><span>From {{auction.seller_name}}. Only {{timeLeft}}s left</span></p>
+            <p class="md-subhead"><span>From {{auction.seller_name}}. Only {{auction.timeLeft}}s left</span></p>
           </div>
           <div ng-if="!auction &amp;&amp; latest &amp;&amp; latest.winner">
             <p class="md-display-2"><span>{{latest.winner_name}} won!</span></p>

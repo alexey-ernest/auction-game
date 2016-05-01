@@ -169,7 +169,6 @@
           $scope.loading = false;
           $scope.auction = null;
           $scope.latest = null;
-          $scope.timeLeft = 0;
           $scope.canBet = false;
 
           $scope.player = player.get();
@@ -205,13 +204,10 @@
                   $scope.latest = latest;
                 });
               } else {
-                var end = moment(data.end_time);
-                var now = moment();
-                $scope.timeLeft = end.diff(now, 's');
-                $scope.canBet = $scope.player && $scope.player.id !== data.seller;
-
                 data.icon = icons.getIcon(data.item);
                 data.min_bid = data.bid ? data.bid + 1 : data.min_bid;
+
+                $scope.canBet = $scope.player && $scope.player.id !== data.seller;
               }
               
               $scope.latest = null;

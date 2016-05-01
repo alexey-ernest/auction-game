@@ -9,7 +9,7 @@ script(type="text/ng-template", id="game.html")
 				span for {{auction.min_bid}} 
 				i.flaticon-coins 
 			p.md-subhead
-				span From {{auction.seller_name}}. Only {{timeLeft}}s left
+				span From {{auction.seller_name}}. Only {{auction.timeLeft}}s left
 
 		//- winner
 		div(ng-if="!auction && latest && latest.winner")
