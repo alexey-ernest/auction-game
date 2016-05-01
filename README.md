@@ -3,7 +3,7 @@ Auction game built on node.js and angular.js
 
 * [Technologies](#technologies)
 * [UI](#ui)
-* [Docker](#docker)
+* [How to Run](#how-to-run)
 * [Tests](#tests)
 * [Example](#example)
 
@@ -32,7 +32,8 @@ Web UI is built on Angular.js
 <img src="assets/auction-design.png" width="400">
 
 
-## Docker
+## How to Run
+The easies way to run it inside Docker container.
 
 To build docker image, type:
 ```
@@ -44,7 +45,7 @@ Or pull auto-built image from docker hub:
 $ docker pull alexeyernest/auction-game
 ```
 
-Run postgres container, for example:
+If you don't have Postgres running, run postgres container, for example:
 ```
 $ docker run -d --name postgres -p 5432:5432 -e POSTGRES_DB=auction -e POSTGRES_USER=auction -e POSTGRES_PASSWORD=auction postgres:9.4
 ```
@@ -116,7 +117,7 @@ CREATE INDEX auction_latest ON auctions (end_time);
 CREATE INDEX auction_current ON auctions (start_time, end_time);
 ```
 
-Then run a container with parameters.
+Then run auction container with parameters.
 
 | Parameter | Description |
 |------------|-----------|
