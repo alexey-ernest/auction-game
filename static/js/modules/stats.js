@@ -14,7 +14,7 @@
     function(playerApi, player, $state, authApi, access, events) {
 
       function loadPlayerData($scope) {
-        if (!access.token()) return;
+        if (!access.token()) return $state.go('login');
 
         $scope.loading = true;
         playerApi.get(access.token(), function (err, data) {
