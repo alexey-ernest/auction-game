@@ -5,8 +5,8 @@
 var express = require('express');
 var router = express.Router();
 
-var auth = require('../lib/middleware/auth');
-var db = require('../lib/db');
+var auth = require('../../../lib/middleware/auth');
+var db = require('../../../lib/db');
 var Inventory = db.Inventory;
 
 /**

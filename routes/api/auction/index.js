@@ -6,10 +6,10 @@ var express = require('express');
 var router = express.Router();
 var moment = require('moment');
 
-var db = require('../lib/db');
+var db = require('../../../lib/db');
 var Auction = db.Auction;
-var auctionService = require('../lib/auction-service')(db);
-var auth = require('../lib/middleware/auth');
+var auctionService = require('../../../lib/auction-service')(db);
+var auth = require('../../../lib/middleware/auth');
 
 
 /**
