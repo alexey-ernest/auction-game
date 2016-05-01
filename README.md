@@ -46,7 +46,7 @@ $ docker pull alexeyernest/auction-game
 
 Run postgres container, for example:
 ```
-docker run -d --name postgres -p 5432:5432 -e POSTGRES_DB=auction -e POSTGRES_USER=auction -e POSTGRES_PASSWORD=auction postgres:9.4
+$ docker run -d --name postgres -p 5432:5432 -e POSTGRES_DB=auction -e POSTGRES_USER=auction -e POSTGRES_PASSWORD=auction postgres:9.4
 ```
 
 And create db schema using [schema.sql](database/schema.sql):
