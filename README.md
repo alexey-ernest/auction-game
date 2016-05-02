@@ -33,7 +33,7 @@ Web UI is built on Angular.js
 
 
 ## How to Run
-The easies way to run it inside Docker container.
+The easiest way to run it inside Docker container.
 
 To build docker image, type:
 ```
