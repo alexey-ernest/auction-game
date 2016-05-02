@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 var logger = require('morgan');
 var pg = require('pg');
 
-var defaultRoutes = require('./routes/default');
+var defaults = require('./routes/default');
 var routes = require('./routes');
 
 var app = express();
@@ -37,7 +37,7 @@ app.use('/', routes);
 app.use('/', express.static(path.join(__dirname, 'public')));
 
 // error handlers
-app.use(defaultRoutes.notfound);
-app.use(defaultRoutes.error);
+app.use(defaults.notfound);
+app.use(defaults.error);
 
 module.exports = app;
