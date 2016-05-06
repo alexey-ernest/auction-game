@@ -122,7 +122,7 @@ Then run auction container with parameters.
 | Parameter | Description |
 |------------|-----------|
 | POSTGRES_CONNECTION | Postgres connection string |
-| TOKEN_SECRET | Secret string for encryping JWT tokens |
+| TOKEN_SECRET | Secret string for encrypting JWT tokens |
 | DEBUG | Turn on debugging information, should be `auction-game:*` |
 
 For example:
